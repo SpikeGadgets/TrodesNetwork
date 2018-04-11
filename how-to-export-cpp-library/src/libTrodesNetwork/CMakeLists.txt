@@ -70,7 +70,6 @@ target_link_libraries(${LIBRARY_TARGET_NAME} -Wl,--whole-archive ${CMAKE_CURRENT
 target_link_libraries(${LIBRARY_TARGET_NAME} -Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libmlm.a -Wl,--no-whole-archive)
 target_link_libraries(${LIBRARY_TARGET_NAME} pthread)
 
-
 # If you used find_package() you need to use target_include_directories() and/or
 # target_link_libraries(). As explained previously, depending on the imported
 # objects, you may need to call either or both:
