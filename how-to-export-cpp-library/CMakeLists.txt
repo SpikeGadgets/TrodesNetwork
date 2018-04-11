@@ -33,7 +33,7 @@ include(GNUInstallDirs)
 #*******************
 #**This project's specific settings
 set (CMAKE_CXX_STANDARD 11)
-include_directories(src/libTrodesNetwork/zmq/include)
+include_directories(src/zmq/include)
 include_directories(src/utility)
 #*******************
 
