@@ -30,11 +30,12 @@ project(libTrodesNetwork
 # See https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html
 include(GNUInstallDirs)
 
-set (CMAKE_CXX_STANDARD 11)
 #*******************
-# Adding ZMQ include files
+#**This project's specific settings
+set (CMAKE_CXX_STANDARD 11)
 include_directories(src/libTrodesNetwork/zmq/include)
 include_directories(src/utility)
+#*******************
 
 # Control where libraries and executables are placed during the build.
 # With the following settings executables are placed in <the top level of the

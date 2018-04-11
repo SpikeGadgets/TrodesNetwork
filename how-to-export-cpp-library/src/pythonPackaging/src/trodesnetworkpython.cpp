@@ -1,7 +1,9 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
-#include "../TrodesNetwork/trodesnetwork.h"
-#include "../Modules/cameraModule/src/cameramodulenetworkdefines.h"
+// #include "../Modules/cameraModule/src/cameramodulenetworkdefines.h"
+#include "libTrodesNetwork/AbstractModuleClient.h"
+#include "libTrodesNetwork/highfreqclasses.h"
+#include "libTrodesNetwork/networkincludes.h"
 using namespace boost::python;
 namespace np = boost::python::numpy;
 
@@ -310,8 +312,9 @@ private:
 class HFSubConsumer_python : public HFSubConsumer, public wrapper<HFSubConsumer>{
 public:
     HFSubConsumer_python(HighFreqDataType hfdt, int bufsize) : HFSubConsumer(hfdt, bufsize){}
-    size_t readData_python(PyObject* buffer, size_t size){
-        return readData(PyMemoryView_GET_BUFFER(buffer)->buf, size);
+    size_t readData_python(np::ndarray buffer){
+//        return readData(PyMemoryView_GET_BUFFER(buffer)->buf, size);
+        return readData(buffer.get_data(), buffer.get_dtype().get_itemsize());
     }
 };
 
@@ -540,7 +543,7 @@ public:
     }
 };
 
-BOOST_PYTHON_MODULE(trodesnetworkpython){
+BOOST_PYTHON_MODULE(trodesnetwork){
     PyEval_InitThreads();
     Py_Initialize();
     np::initialize();
@@ -553,7 +556,7 @@ BOOST_PYTHON_MODULE(trodesnetworkpython){
     to_python_converter<lfpPacket, lfpPacketToList>();
 
     scope().attr("TRODES_NETWORK_ID") = TRODES_NETWORK_ID;
-    scope().attr("CAMERA_MODULE_NETWORK_ID") = CAMERA_MODULE_NETWORK_ID;
+    // scope().attr("CAMERA_MODULE_NETWORK_ID") = CAMERA_MODULE_NETWORK_ID;
     scope().attr("DEFAULT_SERVER_ADDRESS") = DEFAULT_SERVER_ADDRESS;
     scope().attr("DEFAULT_SERVER_PORT") = DEFAULT_SERVER_PORT;
     scope().attr("NEURALSTREAM") = hfType_NEURO;
@@ -608,9 +611,10 @@ BOOST_PYTHON_MODULE(trodesnetworkpython){
     class_<HFSubConsumer_python, boost::noncopyable>
             ("HFSubConsumer", init<HighFreqDataType, int>())
             .def("initialize", &HFSubConsumer_python::initialize)
-            .def("readData", static_cast<size_t (HFSubConsumer::*)(PyObject*, size_t)>(&HFSubConsumer_python::readData_python))
+            .def("readData", static_cast<size_t (HFSubConsumer::*)(np::ndarray)>(&HFSubConsumer_python::readData_python))
             .def("available", &HFSubConsumer_python::available)
             .def("getDataType", &HFSubConsumer_python::getType)
+            .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
             ;
 
     class_<HFParsingInfo>("HFParsingInfo")

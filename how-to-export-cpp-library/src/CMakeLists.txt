@@ -1,2 +1,3 @@
 add_subdirectory(libTrodesNetwork)
 add_subdirectory(ExeExample)
+add_subdirectory(pythonPackaging)
