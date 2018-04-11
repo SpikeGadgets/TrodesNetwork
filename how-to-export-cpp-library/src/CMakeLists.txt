@@ -1,0 +1,2 @@
+add_subdirectory(libTrodesNetwork)
+add_subdirectory(ExeExample)
