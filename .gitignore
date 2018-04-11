@@ -1,3 +1,7 @@
+# VSCode stuff
+.vscode/*
+*.code-workspace
+
 # Pre & Compiled source #
 #########################
 *.com
