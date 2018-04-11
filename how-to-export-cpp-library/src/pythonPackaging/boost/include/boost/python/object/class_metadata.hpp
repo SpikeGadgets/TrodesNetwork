@@ -83,7 +83,7 @@ inline void register_shared_ptr_from_python_and_casts(T*, Bases)
 {
   // Constructor performs registration
   python::detail::force_instantiate(converter::shared_ptr_from_python<T, boost::shared_ptr>());
-#if !defined(BOOST_NO_CXX11_SMART_PTR)
+#if __cplusplus >= 201103L
   python::detail::force_instantiate(converter::shared_ptr_from_python<T, std::shared_ptr>());
 #endif
 
