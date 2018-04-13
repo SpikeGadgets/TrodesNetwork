@@ -5,14 +5,13 @@
 To build from scratch, run the following
 
 ```bash
-cd TrodesNetworkSource
 mkdir build && cd build
 cmake -DCMAKE_INSTALL_PREFIX=/path/to/library/directory ..
 make
 make install
 ```
 
-This will install the C++ headers, libraries, and python packaging into the specified directory `/path/to/library/directory`. If you want to install into the system, don't include the `-DCMAKE_INSTALL_PREFIX` part of the cmake call
+This will install the C++ headers, libraries, and python packaging into the specified directory `/path/to/library/directory`. If you want to install into the default location for your system, don't include the `-DCMAKE_INSTALL_PREFIX` part of the cmake call
 
 ## Using with C++
 
@@ -26,7 +25,9 @@ To use with Python (version 3.5+), navigate to the install directory and run the
 python3 -m pip install spikegadgets_python/
 ```
 
-To use the library, simply call `from spikegadgets import trodesnetwork`. 
+If you are updating the library with a newer version, make sure you pass in the flag `--upgrade` at the end of that statement
+
+To import the library, simply call `from spikegadgets import trodesnetwork`.
 
 ## Documentation
 

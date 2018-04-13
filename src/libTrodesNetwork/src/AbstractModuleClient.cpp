@@ -331,6 +331,17 @@ bool AbstractModuleClient::sendStimulationStopGroup(uint16_t group){
     return sendHardwareMessage(m);
 }
 
+bool AbstractModuleClient::sendGlobalStimulationSettings(GlobalStimulationSettings settings){
+    TrodesMsg m;
+    m.addcontents("sn", "SETGS", settings.encode());
+    return sendHardwareMessage(m);
+}
+
+bool AbstractModuleClient::sendGlobalStimulationCommand(GlobalStimulationCommand command){
+    TrodesMsg m;
+    m.addcontents("sn", "SETGC", command.encode());
+    return sendHardwareMessage(m);
+}
 
 int AbstractModuleClient::processCommandMsg(std::string cmdType, TrodesMsg &msg) {
     int rc = 0;
@@ -460,6 +471,10 @@ int AbstractModuleClient::processNotification(const char *, std::string noteType
         if(!unsubToTimestamps()){
             std::cerr << error("Could not properly de-register timestamps socket!\n");
         }
+    }
+    else if(noteType == CLIENT_EXPIRED_MSG){
+        auto const who = msg.popstr();
+        state->remove_client(who);
     }
     else{
         std::cout << "[AMC]: Notification type [" << noteType << "] not recognized.\n";

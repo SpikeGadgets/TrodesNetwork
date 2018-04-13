@@ -92,18 +92,6 @@ public:
     binarydata encode() const;
     void decode(const binarydata &data);
 
-    enum GlobalStimCurrentScaling {
-        max10nA = 10,
-        max20nA = 20,
-        max50nA = 50,
-        max100nA = 100,
-        max200nA = 200,
-        max500nA = 500,
-        max1uA = 1000,
-        max2uA = 2000,
-        max5uA = 5000,
-        max10uA = 10000
-    };
 
     enum PulseShapeErrorCodes {
         periodTooShort = 0x01,
@@ -186,5 +174,79 @@ private:
     bool sequencerIsSet;
 
 };
+
+
+class GlobalStimulationSettings : public NetworkDataType{
+public:
+    GlobalStimulationSettings();
+
+    enum CurrentScaling {
+        max10nA = 0x0,
+        max20nA = 0x1,
+        max50nA = 0x2,
+        max100nA = 0x3,
+        max200nA = 0x4,
+        max500nA = 0x5,
+        max1uA = 0x6,
+        max2uA = 0x7,
+        max5uA = 0x8,
+        max10uA = 0x9
+    };
+
+    void setVoltageScale(CurrentScaling s);
+    //void setSettleAll(bool s);
+    //void setSettleChip(bool s);
+    //void setUseFastSettle(bool s);
+    //void setChargeRecoverySwitch(bool s);
+    //void setUseDCAmp(bool s);
+
+    binarydata encode() const;
+    void decode(const binarydata &data);
+    inline CurrentScaling currentScaling() {return scaleValue;}
+    inline bool settleAll() {return settle_All_Channels_If_One_Channel_Is_Settling;}
+    inline bool settleChip() {return settle_Same_Chip_If_One_Channel_Is_Settling;}
+    inline bool useFastSettle() {return use_Fast_Settle_For_Amp_Settle_Mode;}
+    inline bool chargeRecoverySwitch() {return use_Switch_For_Charge_Recovery;}
+    inline bool useDCAmp() {return use_DC_amp;}
+
+private:
+    //Global mode settings
+    CurrentScaling scaleValue;
+    bool settle_All_Channels_If_One_Channel_Is_Settling;
+    bool settle_Same_Chip_If_One_Channel_Is_Settling;
+    bool use_Fast_Settle_For_Amp_Settle_Mode; //false makes it use amplifier low frequency cutoff instead
+    bool use_Switch_For_Charge_Recovery; //false makes it use current-limited drivers instead
+    bool use_DC_amp;  //for 10 bit DC amplifiers. False makes it use 16 bit AC amplifiers
+
+
+
+};
+
+class GlobalStimulationCommand : public NetworkDataType {
+public:
+    GlobalStimulationCommand();
+    void setStimEnabled(bool s);
+    void setResetSequencer();
+    void setAbortStimulation();
+    void setClearDSPOffset();
+
+    binarydata encode() const;
+    void decode(const binarydata &data);
+
+    inline bool stimEnabled() {return enableStimulation;}
+    inline bool sequencerReset() {return resetSequencerCmd;}
+    inline bool stimulationAborted() {return killStimulationCmd;}
+    inline bool dspOffsetCleared() {return clearDSPOffsetRemovalCmd;}
+
+private:
+
+    //Commands executed once
+    bool resetSequencerCmd;
+    bool killStimulationCmd;
+    bool clearDSPOffsetRemovalCmd;
+    bool enableStimulation;  //must be set to false to program new stim commands, and true to trigger them
+
+};
+
 
 #endif // TRODESGLOBALTYPES_H

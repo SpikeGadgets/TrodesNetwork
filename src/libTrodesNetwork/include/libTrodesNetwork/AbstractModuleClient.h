@@ -124,6 +124,12 @@ public:
     //! \brief send Stimulation Stop Group
     bool sendStimulationStopGroup(uint16_t group);
 
+    //! \brief send globalstimulationsettings
+    bool sendGlobalStimulationSettings(GlobalStimulationSettings settings);
+
+    //! \brief send globalstimulationcommand
+    bool sendGlobalStimulationCommand(GlobalStimulationCommand command);
+
     //Variable names omitted to avoid a million compile warnings of parameter unused
     virtual void recv_file_open  (std::string f){} //(filename)
     virtual void recv_file_close (){}

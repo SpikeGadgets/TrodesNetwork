@@ -308,3 +308,64 @@ uint8_t StimulationCommand::getLeadingPulseAmplitude() const
 {
     return leadingPulseAmplitude;
 }
+
+
+
+GlobalStimulationSettings::GlobalStimulationSettings() {
+    //Global mode settings
+    settle_All_Channels_If_One_Channel_Is_Settling = false;
+    settle_Same_Chip_If_One_Channel_Is_Settling = false;
+    use_Fast_Settle_For_Amp_Settle_Mode = true; //false makes it use amplifier low frequency cutoff instead
+    use_Switch_For_Charge_Recovery = true; //false makes it use current-limited drivers instead
+    use_DC_amp = false;  //for 10 bit DC amplifiers. False makes it use 16 bit AC amplifiers
+    scaleValue = max1uA;
+
+}
+
+void GlobalStimulationSettings::setVoltageScale(CurrentScaling s) {
+    scaleValue = s;
+}
+
+binarydata GlobalStimulationSettings::encode() const{
+    return NetworkDataType::serializedata(scaleValue);
+}
+
+void GlobalStimulationSettings::decode(const binarydata &data){
+    CurrentScaling s;
+    NetworkDataType::deserializedata(data, s);
+    setVoltageScale(s);
+}
+//-----------------------------------------------------------------
+
+
+GlobalStimulationCommand::GlobalStimulationCommand() {
+    //Commands executed once
+    resetSequencerCmd = false;
+    killStimulationCmd = false;
+    clearDSPOffsetRemovalCmd = false;
+    enableStimulation = false;  //must be set to false to program new stim commands, and true to trigger them
+}
+
+void GlobalStimulationCommand::setStimEnabled(bool s) {
+    enableStimulation = s;
+}
+
+void GlobalStimulationCommand::setAbortStimulation() {
+    killStimulationCmd = true;
+}
+
+void GlobalStimulationCommand::setClearDSPOffset() {
+    clearDSPOffsetRemovalCmd = true;
+}
+
+void GlobalStimulationCommand::setResetSequencer() {
+    resetSequencerCmd = true;
+}
+
+binarydata GlobalStimulationCommand::encode() const{
+    return NetworkDataType::serializedata(resetSequencerCmd, killStimulationCmd, clearDSPOffsetRemovalCmd, enableStimulation);
+}
+
+void GlobalStimulationCommand::decode(const binarydata &data){
+    NetworkDataType::deserializedata(data, resetSequencerCmd, killStimulationCmd, clearDSPOffsetRemovalCmd, enableStimulation);
+}

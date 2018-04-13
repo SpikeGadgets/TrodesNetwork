@@ -556,7 +556,6 @@ BOOST_PYTHON_MODULE(trodesnetwork){
     to_python_converter<lfpPacket, lfpPacketToList>();
 
     scope().attr("TRODES_NETWORK_ID") = TRODES_NETWORK_ID;
-    // scope().attr("CAMERA_MODULE_NETWORK_ID") = CAMERA_MODULE_NETWORK_ID;
     scope().attr("DEFAULT_SERVER_ADDRESS") = DEFAULT_SERVER_ADDRESS;
     scope().attr("DEFAULT_SERVER_PORT") = DEFAULT_SERVER_PORT;
     scope().attr("NEURALSTREAM") = hfType_NEURO;
@@ -597,6 +596,30 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def("setChannels",&StimulationCommand::setChannels)
             .def("setBiphasicPulseShape", &StimulationCommand::setBiphasicPulseShape)
             .def("isValid", &StimulationCommand::isValid)
+            ;
+
+    enum_<GlobalStimulationSettings::CurrentScaling>("CurrentScaling")
+            .value("max10nA", GlobalStimulationSettings::max10nA)
+            .value("max20nA", GlobalStimulationSettings::max20nA)
+            .value("max50nA", GlobalStimulationSettings::max50nA)
+            .value("max100nA", GlobalStimulationSettings::max100nA)
+            .value("max200nA", GlobalStimulationSettings::max200nA)
+            .value("max500nA", GlobalStimulationSettings::max500nA)
+            .value("max1uA", GlobalStimulationSettings::max1uA)
+            .value("max2uA", GlobalStimulationSettings::max2uA)
+            .value("max5uA", GlobalStimulationSettings::max5uA)
+            .value("max10uA", GlobalStimulationSettings::max10uA)
+            ;
+
+    class_<GlobalStimulationSettings>("GlobalStimulationSettings", init<>())
+            .def("setVoltageScale", &GlobalStimulationSettings::setVoltageScale)
+            ;
+
+    class_<GlobalStimulationCommand>("GlobalStimulationCommand", init<>())
+            .def("setStimEnabled", &GlobalStimulationCommand::setStimEnabled)
+            .def("setResetSequencer", &GlobalStimulationCommand::setResetSequencer)
+            .def("setAbortStimulation", &GlobalStimulationCommand::setAbortStimulation)
+            .def("setClearDSPOffset", &GlobalStimulationCommand::setClearDSPOffset)
             ;
 //    void (HighFreqPub::*pubdatax2)(void, size_t) = &HighFreqPub::publishData;
 //    void (HighFreqPub::*pubdatax3)(void, size_t, int64_t) = &HighFreqPub::publishData;
@@ -721,6 +744,8 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def("sendStimulationStartGroup",&PythonModuleClient::sendStimulationStartGroup)
             .def("sendStimulationStopSlot", &PythonModuleClient::sendStimulationStopSlot)
             .def("sendStimulationStopGroup",&PythonModuleClient::sendStimulationStopGroup)
+            .def("sendGlobalStimulationSettings", &PythonModuleClient::sendGlobalStimulationSettings)
+            .def("sendGlobalStimulationCommand", &PythonModuleClient::sendGlobalStimulationCommand)
             .def("latestTrodesTimestamp", &PythonModuleClient::latestTrodesTimestamp)
             .def("sendAnnotationRequest", &PythonModuleClient::sendAnnotationRequest)
             ;

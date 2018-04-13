@@ -6,22 +6,22 @@
 #########################
 *.com
 *.class
-*.dll
-*.exe
+#*.dll
+#*.exe
 *.o
-*.so
+#*.so
 *.out
 *.app
 *.slo
-*.lo
+#*.lo
 *.gch
 *.pch
-*.dylib
+#*.dylib
 *.mod
 *.lai
-*.la
-*.a
-*.lib
+#*.la
+#*.a
+#*.lib
 
 # Packages #
 ############
