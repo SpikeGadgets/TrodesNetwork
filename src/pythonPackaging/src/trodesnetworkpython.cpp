@@ -1,6 +1,5 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
-// #include "../Modules/cameraModule/src/cameramodulenetworkdefines.h"
 #include "libTrodesNetwork/AbstractModuleClient.h"
 #include "libTrodesNetwork/highfreqclasses.h"
 #include "libTrodesNetwork/networkincludes.h"
@@ -589,7 +588,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
 
     class_<StimulationCommand>
             ("StimulationCommand", init<>())
-            .def(init<int, int, int, uint16_t, uint8_t, uint16_t, uint8_t, uint16_t, uint16_t, uint16_t>())
+//            .def(init<int, int, int, uint16_t, uint8_t, uint16_t, uint8_t, uint16_t, uint16_t, uint16_t>())
             .def("setGroup", &StimulationCommand::setGroup)
             .def("setNoGroup", &StimulationCommand::setNoGroup)
             .def("setSlot", &StimulationCommand::setSlot)

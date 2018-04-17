@@ -46,4 +46,4 @@ link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/li
 link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libmlm.a -Wl,--no-whole-archive)
 endif()
 add_subdirectory(libTrodesNetwork)
-# add_subdirectory(pythonPackaging)
+add_subdirectory(pythonPackaging)
