@@ -349,10 +349,9 @@ void MlmWrap::create(const char* _id, const char* e) {
 
 MlmWrap::~MlmWrap(){
     if(actor)
-    zactor_destroy(&actor);
-    else{
+        zactor_destroy(&actor);
+    else
         mlm_client_destroy(&client);
-    }
     //Destroying actor causes the rest of cleanup to happen in message_reactor_task
 }
 

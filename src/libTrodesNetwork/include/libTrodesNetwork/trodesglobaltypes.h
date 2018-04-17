@@ -85,9 +85,6 @@ struct spikePacket{
 class StimulationCommand : public NetworkDataType{
 public:
     StimulationCommand();
-    StimulationCommand(int slot, int cathodeChan, int anodeChan, uint16_t leadingPulseWidth_Samples, uint8_t leadingPulseAmplitude,
-                       uint16_t secondPulseWidth_Samples, uint8_t secondPulseAmplitude, uint16_t interPhaseDwell_Samples,
-                       uint16_t pulsePeriod_Samples, uint16_t startDelay_Samples);
 
     binarydata encode() const;
     void decode(const binarydata &data);
@@ -105,10 +102,9 @@ public:
     bool setGroup(int groupNum);
     void setNoGroup();
     bool setSlot(int slot);
-    bool setChannels(int cathodeChan, int anodeChan);
+    bool setChannels(int cathodeNTrode, int cathodeChan, int anodeNTrode, int anodeChan);
     uint8_t setBiphasicPulseShape(uint16_t leadingPulseWidth_Samples, uint8_t leadingPulseAmplitude, uint16_t secondPulseWidth_Samples, uint8_t secondPulseAmplitude, uint16_t interPhaseDwell_Samples, uint16_t pulsePeriod_Samples, uint16_t startDelay_Samples);
 
-//    uint8_t setBiphasicPulseShape_usec();
     uint8_t getSlot() const;
     uint8_t get_group() const;
     uint16_t getNumPulsesInTrain() const;
@@ -127,6 +123,8 @@ public:
     uint16_t getEndMark() const;
     uint16_t getCathodeChannel() const;
     uint16_t getAnodeChannel() const;
+    uint16_t getCathodeNTrodeID() const;
+    uint16_t getAnodeNTrodeID() const;
     bool getAnodePulseLeading() const;
     uint8_t getSecondPulseAmplitude() const;
     uint8_t getLeadingPulseAmplitude() const;
@@ -166,6 +164,8 @@ private:
     bool  settleOn;
     uint16_t cathodeChannel;
     uint16_t anodeChannel;
+    uint16_t cathodeNtrodeID;
+    uint16_t anodeNtrodeID;
     uint8_t slot;
 
     //Validation flags

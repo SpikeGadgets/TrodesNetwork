@@ -131,13 +131,13 @@ public:
     bool sendGlobalStimulationCommand(GlobalStimulationCommand command);
 
     //Variable names omitted to avoid a million compile warnings of parameter unused
-    virtual void recv_file_open  (std::string f){} //(filename)
+    virtual void recv_file_open  (std::string){} //(filename)
     virtual void recv_file_close (){}
-    virtual void recv_acquisition(std::string type, uint32_t t){} //(acquisition type, timestamp)
-    virtual void recv_source     (std::string s){} //(sourcename)
+    virtual void recv_acquisition(std::string, uint32_t){} //(acquisition type, timestamp)
+    virtual void recv_source     (std::string){} //(sourcename)
     virtual void recv_quit       (){}
     virtual void recv_time       (uint32_t t){} //(timestamp)
-    virtual void recv_timerate   (int rate){} //(timerate)
+    virtual void recv_timerate   (int){} //(timerate)
     //! Event received. Reimplement to write in if/else statements for events
     virtual void recv_event      (std::string, std::string, TrodesMsg &){} //(origin, event, msg)
 protected:

@@ -23,6 +23,8 @@ StimulationCommand::StimulationCommand() {
     anodePulseLeading = false;
     cathodeChannel = 0;
     anodeChannel = 0;
+    cathodeNtrodeID = 0;
+    anodeNtrodeID = 0;
     _group = 0;
     _pulseMode = 0x01; //default is biphasic with dwell and cathode leading
     slot = 0;
@@ -42,28 +44,21 @@ StimulationCommand::StimulationCommand() {
 
 }
 
-StimulationCommand::StimulationCommand(int slot, int cathodeChan, int anodeChan, uint16_t leadingPulseWidth_Samples, uint8_t leadingPulseAmplitude, uint16_t secondPulseWidth_Samples, uint8_t secondPulseAmplitude, uint16_t interPhaseDwell_Samples, uint16_t pulsePeriod_Samples, uint16_t startDelay_Samples)
-    : StimulationCommand()
-{
-    setSlot(slot);
-    setChannels(cathodeChan, anodeChan);
-    setBiphasicPulseShape(leadingPulseWidth_Samples,leadingPulseAmplitude, secondPulseWidth_Samples, secondPulseAmplitude, interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
-}
 
 binarydata StimulationCommand::encode() const{
-    return NetworkDataType::serializedata(_group, slot, cathodeChannel, anodeChannel,
+    return NetworkDataType::serializedata(_group, slot, cathodeChannel, anodeChannel, cathodeNtrodeID, anodeNtrodeID,
                                           leadingPulseWidth_Samples, leadingPulseAmplitude,
                                           secondPulseWidth_Samples, secondPulseAmplitude,
                                           interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
 }
 
 void StimulationCommand::decode(const binarydata &data){
-    NetworkDataType::deserializedata(data, _group, slot, cathodeChannel, anodeChannel,
+    NetworkDataType::deserializedata(data, _group, slot, cathodeChannel, anodeChannel, cathodeNtrodeID, anodeNtrodeID,
                                      leadingPulseWidth_Samples, leadingPulseAmplitude,
                                      secondPulseWidth_Samples, secondPulseAmplitude,
                                      interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
     setSlot(slot);
-    setChannels(cathodeChannel, anodeChannel);
+    setChannels(cathodeNtrodeID, cathodeChannel, anodeNtrodeID, anodeChannel);
     setBiphasicPulseShape(leadingPulseWidth_Samples, leadingPulseAmplitude,
                           secondPulseWidth_Samples, secondPulseAmplitude,
                           interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
@@ -106,14 +101,15 @@ bool StimulationCommand::setSlot(int in_slot) {
     return true;
 }
 
-bool StimulationCommand::setChannels(int cathodeChan, int anodeChan) {
-//    std::cerr << "set channels " << cathodeChan << " " << anodeChan << "\n";
+bool StimulationCommand::setChannels(int cathodeNTrode, int cathodeChan, int anodeNTrode, int anodeChan) {
     if ( (cathodeChan < 0) || (anodeChan < 0)) { //maybe also check that the channels are stim capable?
         return false;
     }
 
     cathodeChannel = cathodeChan;
     anodeChannel = anodeChan;
+    cathodeNtrodeID = cathodeNTrode;
+    anodeNtrodeID = anodeNTrode;
     channelIsSet = true;
     return true;
 }
@@ -292,6 +288,15 @@ uint16_t StimulationCommand::getCathodeChannel() const
 uint16_t StimulationCommand::getAnodeChannel() const
 {
     return anodeChannel;
+}
+uint16_t StimulationCommand::getCathodeNTrodeID() const
+{
+    return cathodeNtrodeID;
+}
+
+uint16_t StimulationCommand::getAnodeNTrodeID() const
+{
+    return anodeNtrodeID;
 }
 
 bool StimulationCommand::getAnodePulseLeading() const
