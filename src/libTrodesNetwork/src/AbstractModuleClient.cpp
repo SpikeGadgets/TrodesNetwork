@@ -8,7 +8,7 @@ AbstractModuleClient::AbstractModuleClient(const char* id, const char* addr, int
 }
 
 AbstractModuleClient::AbstractModuleClient(std::string id, std::string addr, int port)
-    : MlmWrap(id.c_str(), addr.c_str(), port), timestampsub(NULL) {
+    : MlmWrap(id.c_str(), addr.c_str(), port), timestampsub(NULL), timestampaddress("") {
     if (isConnectedToBroker()){
         initializeStreams();
     }
@@ -486,15 +486,15 @@ bool AbstractModuleClient::subToTimestamps(const std::string &address){
     if(address.empty()){
         return false;
     }
-    state->setTimestamp_endpoint(address);
     HighFreqDataType hf(TIMESTAMPS_SOCK, TRODES_NETWORK_ID,"t", address, sizeof(lastTimestamp));
     if(timestampsub){
         if(zsock_is(timestampsub)){
-            if(streq(zsock_endpoint(timestampsub), address.c_str())){
+            if(timestampaddress == address){
                 return true;
             }
             else{
                 zsock_destroy(&timestampsub);
+                timestampaddress = "";
             }
         }
         else{
@@ -507,6 +507,9 @@ bool AbstractModuleClient::subToTimestamps(const std::string &address){
     if(zsock_connect(timestampsub, "%s", address.c_str())){
         zsock_destroy(&timestampsub);
         return false;
+    }else{
+        timestampaddress = address;
+        state->setTimestamp_endpoint(address);
     }
 
     return true;
@@ -517,6 +520,7 @@ bool AbstractModuleClient::unsubToTimestamps(){
     lastTimestamp = 0;
     if(timestampsub){
         zsock_destroy(&timestampsub);
+        timestampaddress = "";
         return true;
     }
     return true;

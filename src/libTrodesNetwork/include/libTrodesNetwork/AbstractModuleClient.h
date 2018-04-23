@@ -155,6 +155,7 @@ private:
     std::set<std::string> subbedEvents;
 
     zsock_t* timestampsub;
+    std::string timestampaddress;
     uint32_t lastTimestamp = 0;
     bool subToTimestamps(const std::string &address);
     bool unsubToTimestamps();
