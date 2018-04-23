@@ -104,6 +104,7 @@ public:
     bool setSlot(int slot);
     bool setChannels(int cathodeNTrode, int cathodeChan, int anodeNTrode, int anodeChan);
     uint8_t setBiphasicPulseShape(uint16_t leadingPulseWidth_Samples, uint8_t leadingPulseAmplitude, uint16_t secondPulseWidth_Samples, uint8_t secondPulseAmplitude, uint16_t interPhaseDwell_Samples, uint16_t pulsePeriod_Samples, uint16_t startDelay_Samples);
+    void setNumPulsesInTrain(uint16_t pulses);
 
     uint8_t getSlot() const;
     uint8_t get_group() const;

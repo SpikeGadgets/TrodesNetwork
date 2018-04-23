@@ -594,6 +594,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def("setSlot", &StimulationCommand::setSlot)
             .def("setChannels",&StimulationCommand::setChannels)
             .def("setBiphasicPulseShape", &StimulationCommand::setBiphasicPulseShape)
+            .def("setNumPulsesInTrain", &StimulationCommand::setNumPulsesInTrain)
             .def("isValid", &StimulationCommand::isValid)
             ;
 

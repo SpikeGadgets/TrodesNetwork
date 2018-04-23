@@ -200,6 +200,10 @@ uint8_t StimulationCommand::setBiphasicPulseShape(uint16_t in_leadingPulseWidth_
     return 0;
 }
 
+void StimulationCommand::setNumPulsesInTrain(uint16_t pulses){
+    numPulsesInTrain = pulses;
+}
+
 uint8_t StimulationCommand::getSlot() const
 {
     return slot;
