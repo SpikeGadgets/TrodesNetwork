@@ -49,19 +49,20 @@ binarydata StimulationCommand::encode() const{
     return NetworkDataType::serializedata(_group, slot, cathodeChannel, anodeChannel, cathodeNtrodeID, anodeNtrodeID,
                                           leadingPulseWidth_Samples, leadingPulseAmplitude,
                                           secondPulseWidth_Samples, secondPulseAmplitude,
-                                          interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
+                                          interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples, numPulsesInTrain);
 }
 
 void StimulationCommand::decode(const binarydata &data){
     NetworkDataType::deserializedata(data, _group, slot, cathodeChannel, anodeChannel, cathodeNtrodeID, anodeNtrodeID,
                                      leadingPulseWidth_Samples, leadingPulseAmplitude,
                                      secondPulseWidth_Samples, secondPulseAmplitude,
-                                     interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
+                                     interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples, numPulsesInTrain);
     setSlot(slot);
     setChannels(cathodeNtrodeID, cathodeChannel, anodeNtrodeID, anodeChannel);
     setBiphasicPulseShape(leadingPulseWidth_Samples, leadingPulseAmplitude,
                           secondPulseWidth_Samples, secondPulseAmplitude,
                           interPhaseDwell_Samples, pulsePeriod_Samples, startDelay_Samples);
+    setNumPulsesInTrain(numPulsesInTrain);
 }
 
 bool StimulationCommand::isValid() {
