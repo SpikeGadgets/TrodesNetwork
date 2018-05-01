@@ -645,57 +645,52 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def_readwrite("sizeOf", &HFParsingInfo::sizeOf)
             ;
 
-    class_<LFPConsumer_python, boost::noncopyable>
+    class_<LFPConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
             ("LFPConsumer", init<HighFreqDataType, int, HFParsingInfo>())
             .def("initialize", &LFPConsumer_python::initialize)
             .def("getData", &LFPConsumer_python::getData_python)
             .def("available", &LFPConsumer_python::available)
             .def("create_numpy_array", &LFPConsumer_python::create_numpy_array)
-//            .def("lastLatency", &LFPConsumer_python::lastLatency)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
             .def("getNTrodesRequested", &LFPConsumer_python::getNTrodesRequested)
             ;
 
-    class_<SpikesConsumer_python, boost::noncopyable>
+    class_<SpikesConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
             ("SpikesConsumer", init<HighFreqDataType, int, HFParsingInfo, int>())
             .def("initialize", &SpikesConsumer_python::initialize)
             .def("getData",&SpikesConsumer_python::getData_python)
             .def("available", &SpikesConsumer_python::available)
             .def("create_numpy_array", &SpikesConsumer_python::create_numpy_array)
-//            .def("lastLatency", &SpikesConsumer_python::lastLatency)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
             .def("getNTrodesRequested", &SpikesConsumer_python::getNTrodesRequested)
             ;
 
-    class_<AnalogConsumer_python, boost::noncopyable>
+    class_<AnalogConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
             ("AnalogConsumer", init<HighFreqDataType, int, HFParsingInfo>())
             .def("initialize", &AnalogConsumer_python::initialize)
             .def("getData",&AnalogConsumer_python::getData_python)
             .def("available", &AnalogConsumer_python::available)
             .def("create_numpy_array", &AnalogConsumer_python::create_numpy_array)
-//            .def("lastLatency", &AnalogConsumer_python::lastLatency)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
             .def("getChannelsRequested", &AnalogConsumer_python::getChannelsRequested)
             ;
 
-    class_<DigitalConsumer_python, boost::noncopyable>
+    class_<DigitalConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
             ("AnalogConsumer", init<HighFreqDataType, int, HFParsingInfo>())
             .def("initialize", &DigitalConsumer_python::initialize)
             .def("getData",&DigitalConsumer_python::getData_python)
             .def("available", &DigitalConsumer_python::available)
             .def("create_numpy_array", &DigitalConsumer_python::create_numpy_array)
-//            .def("lastLatency", &DigitalConsumer_python::lastLatency)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
             .def("getChannelsRequested", &DigitalConsumer_python::getChannelsRequested)
             ;
 
-    class_<NeuralConsumer_python, boost::noncopyable>
+    class_<NeuralConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
             ("NeuralConsumer", init<HighFreqDataType, int, HFParsingInfo>())
             .def("initialize", &NeuralConsumer_python::initialize)
             .def("getData",&NeuralConsumer_python::getData_python)
             .def("available", &NeuralConsumer_python::available)
             .def("create_numpy_array", &NeuralConsumer_python::create_numpy_array)
-//            .def("lastLatency", &NeuralConsumer_python::lastLatency)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
             .def("getChannelsRequested", &NeuralConsumer_python::getChannelsRequested)
             ;
