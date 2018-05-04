@@ -81,8 +81,8 @@ SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES PREFIX "")
         # ARCHIVE       DESTINATION "${CMAKE_INSTALL_LIBDIR}"                            COMPONENT lib
         # RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}"                            COMPONENT bin
         # PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}" COMPONENT dev)
-
-install(FILES ./README ./setup.py DESTINATION spikegadgets_python)
+install(FILES ./testnetwork.py DESTINATION tests)
+install(FILES ./setup.py DESTINATION spikegadgets_python)
 install(FILES __init__.py DESTINATION spikegadgets_python/spikegadgets)
 install(TARGETS ${LIBRARY_TARGET_NAME} EXPORT ${PROJECT_NAME} LIBRARY DESTINATION spikegadgets_python/spikegadgets)
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS ${LIBRARY_TARGET_NAME})

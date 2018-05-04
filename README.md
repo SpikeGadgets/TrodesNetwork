@@ -1,5 +1,9 @@
 # Trodes Network CMake build
 
+## Purpose
+
+The purpose of this library is for users of Trodes to be able to access spikes, LFP points, camera position, and other valuable data live, during their experiment, using Python or C++. The API also provides the ability for users' programs to communicate and send messages to other modules and even Trodes. Useful applications include: a live ripple detection script, graphing/plotting data, and closed loop experiments.
+
 ## Building
 
 To build from scratch, run the following

@@ -1,0 +1,32 @@
+To install:
+	Python3:
+		Type into terminal the following (you may need root privileges with sudo):
+		(numpy will be installed if it is not already)
+
+			python3 -m pip install spikegadgets_python/
+
+		To use:
+
+			$ python3
+			>>> from spikegadgets import trodesnetwork
+
+
+	C++:
+		More complicated than Python, since there is no built in package system and you have to build your programs
+
+		1. Copy the folders include/ and lib/ into your application directory. 
+		2. In your build, make sure you add the path to include/ for include directories and add the path to lib/ for library directories. 
+		3. Include files in your source code like the following:
+
+			#include "TrodesNetwork/AbstractModuleClient.h"
+
+To test after installing:
+	Python: 
+		1. Run Trodes on any simple config file
+		2. Connect to a simulator stream (Connection -> Source -> Simulation)
+			* It should work on any source but for testing, use simulated.
+		3. Start streaming
+		4. Run: python3 testnetwork.py
+
+To use: 
+	Basic documentation is on https://spikegadgets.github.io/docs/networkapi/. 

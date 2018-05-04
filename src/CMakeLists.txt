@@ -47,3 +47,4 @@ link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/li
 endif()
 add_subdirectory(libTrodesNetwork)
 add_subdirectory(pythonPackaging)
+install(FILES ./README  DESTINATION .)
