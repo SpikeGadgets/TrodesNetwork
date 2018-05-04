@@ -25,7 +25,7 @@ datastream.initialize() #Initialize the streaming object
 
 buf = datastream.create_numpy_array()
 timestamp = 0
-#Continuously get data until Trodes tells us to quit
+#Continuously get data until Trodes tells us to quit, which triggers the function that flips the "stillrunning" variable
 while stillrunning:
     #Get the number of data points that came in
     n = datastream.available(1000) #timeout in ms
@@ -34,6 +34,4 @@ while stillrunning:
         timestamp = datastream.getData() 
         print(buf)
 #Cleanup
-#Cleanup is not needed here b/c it is deleted once it exits "with" block
-#Otherwise, *must* call the following:
 del network

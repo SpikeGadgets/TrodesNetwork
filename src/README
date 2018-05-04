@@ -10,6 +10,11 @@ To install:
 			$ python3
 			>>> from spikegadgets import trodesnetwork
 
+	Anaconda:
+		For some versions of Anaconda (4.x.x and below), if you run into an error when importing, you must also run the following:
+			
+			conda install libgcc
+			pip install numpy --upgrade
 
 	C++:
 		More complicated than Python, since there is no built in package system and you have to build your programs
