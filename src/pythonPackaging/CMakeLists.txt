@@ -59,7 +59,7 @@ target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CM
 # Linking libraries
 target_link_libraries(${LIBRARY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/boost/lib/libboost_python3.a)
 target_link_libraries(${LIBRARY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/boost/lib/libboost_numpy3.a)
-target_link_libraries(${LIBRARY_TARGET_NAME} ${PYTHON_LIBRARIES})
+# target_link_libraries(${LIBRARY_TARGET_NAME} ${PYTHON_LIBRARIES})
 
 
 #Because python doesn't want the lib prefix for imported libraries

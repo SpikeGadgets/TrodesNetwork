@@ -33,5 +33,7 @@ while stillrunning:
     for i in range(n):
         timestamp = datastream.getData() 
         print(buf)
+
+        
 #Cleanup
 del network
