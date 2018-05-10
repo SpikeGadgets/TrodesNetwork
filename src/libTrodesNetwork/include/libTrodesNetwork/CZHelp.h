@@ -7,7 +7,7 @@
 
 #ifndef CZHELP_H
 #define CZHELP_H
-#define __USE_MINGW_ANSI_STDIO 0
+// #define __USE_MINGW_ANSI_STDIO 0
 #include <iostream>
 #include <cstdlib>
 #include <czmq.h>
@@ -18,10 +18,10 @@
 #include <locale>
 #include "networkDataTypes.h"
 
-//Fix for freeing char*'s on windows. 
-#if (defined (__WINDOWS__))
-#define freen(x) do {zstr_free(&x); x = NULL;} while(0)
-#endif
+// //Fix for freeing char*'s on windows. 
+// #if (defined (__WINDOWS__))
+// #define freen(x) do {zstr_free(&x); x = NULL;} while(0)
+// #endif
 class binarydata;
 //class NetworkDataType;
 

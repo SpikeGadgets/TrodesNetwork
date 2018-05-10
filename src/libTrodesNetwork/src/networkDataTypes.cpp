@@ -4,7 +4,7 @@
  * 
  * Created on August 28, 2017, 2:46 PM
  */
-#define __USE_MINGW_ANSI_STDIO 0
+// #define __USE_MINGW_ANSI_STDIO 0
 #include "libTrodesNetwork/networkDataTypes.h"
 #include <ctime>
 #include <sstream>

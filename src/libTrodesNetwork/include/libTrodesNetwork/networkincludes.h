@@ -1,6 +1,6 @@
 #ifndef NETWORKINCLUDES_H
 #define NETWORKINCLUDES_H
-#define __USE_MINGW_ANSI_STDIO 0
+// #define __USE_MINGW_ANSI_STDIO 0
 #include <malamute.h>
 #include <string>
 #include <vector>
