@@ -6,7 +6,11 @@
 # make -j8
 # make install
 # Then copy over static libraries into zmq/lib/static and dynamics into zmq/lib
-if(WIN32)
+if(MSVC)
+    link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libzmq.lib)
+    link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libczmq.lib)
+    link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libmlm.lib)
+elseif(WIN32)
     find_package(libzmq REQUIRED)
     IF (LIBZMQ_FOUND)
         include_directories(${LIBZMQ_INCLUDE_DIRS})
@@ -41,9 +45,9 @@ if(WIN32)
         ${MALAMUTE_LIBRARIES}
     )
 else()
-link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libzmq.a -Wl,--no-whole-archive)
-link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libczmq.a -Wl,--no-whole-archive)
-link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libmlm.a -Wl,--no-whole-archive)
+    link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libzmq.a -Wl,--no-whole-archive)
+    link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libczmq.a -Wl,--no-whole-archive)
+    link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libmlm.a -Wl,--no-whole-archive)
 endif()
 add_subdirectory(libTrodesNetwork)
 add_subdirectory(pythonPackaging)
