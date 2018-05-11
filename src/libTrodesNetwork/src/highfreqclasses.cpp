@@ -1,4 +1,5 @@
 #include "libTrodesNetwork/highfreqclasses.h"
+#include <czmq.h>
 
 #define waittimeout     "$WT"
 #define regdt           "$REG"
@@ -168,7 +169,11 @@ void HFSubConsumer::initialize(){
         actor = zactor_new(ringbufController, this);
     //TODO: verify actor successfully initialized
     req = zsock_new_req(rependpoint.c_str());
-    pollitem = {zsock_resolve(req), 0, ZMQ_POLLIN, 0};
+    pollitem = (zmq_pollitem_t*)malloc(sizeof(zmq_pollitem_t));//{zsock_resolve(req), 0, ZMQ_POLLIN, 0};
+    pollitem->socket = zsock_resolve(req);
+    pollitem->fd = 0;
+    pollitem->events = ZMQ_POLLIN;
+    pollitem->revents = 0;
 }
 
 void HFSubConsumer::sub_reader(zloop_t *loop){
@@ -301,15 +306,15 @@ size_t HFSubConsumer::available(long timeout){
         uint64_t avail;
         //Polling could have timed out last time. First check if there is a message waiting to be grabbed.
         //If there is, it must be an old value since the framequeue size we got was 0. Toss it and try again.
-        zmq_poll(&pollitem, 1, 0);
-        if(pollitem.revents & ZMQ_POLLIN){
+        zmq_poll(pollitem, 1, 0);
+        if(pollitem->revents & ZMQ_POLLIN){
             zsock_brecv(req, "8", &avail);
         }
 
         //Request again after clearing any messages.
         zstr_send(req, waittimeout);
-        zmq_poll(&pollitem, 1, timeout);
-        if(pollitem.revents & ZMQ_POLLIN){
+        zmq_poll(pollitem, 1, timeout);
+        if(pollitem->revents & ZMQ_POLLIN){
             zsock_brecv(req, "8", &avail);
             return avail;
         }

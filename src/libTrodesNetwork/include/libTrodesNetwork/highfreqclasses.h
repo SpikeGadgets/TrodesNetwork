@@ -8,7 +8,12 @@
 #include <atomic>
 #include <numeric>
 
-
+struct _zsock_t; typedef _zsock_t zsock_t;
+struct _zactor_t; typedef _zactor_t zactor_t;
+struct _zloop_t; typedef _zloop_t zloop_t;
+struct _zframe_t; typedef _zframe_t zframe_t;
+typedef struct zmq_pollitem_t zmq_pollitem_t;
+typedef unsigned char byte;
 class HighFreqPub {
 public:
     HighFreqPub();
@@ -119,7 +124,7 @@ private:
     zsock_t *rep;
     std::string rependpoint;
     bool waiting;
-    zmq_pollitem_t pollitem;
+    zmq_pollitem_t *pollitem;
 //    int64_t lastlatency;
     int64_t lasttimestamp;
 //    unsigned long long totallatency;

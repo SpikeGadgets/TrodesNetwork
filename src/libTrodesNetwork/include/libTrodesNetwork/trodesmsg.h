@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <czmq.h>
 #include "networkDataTypes.h"
 #include "CZHelp.h"
 
+typedef unsigned char byte;
 
 /*!
  * \brief TrodesMsg is a class that encapsulates zmsg_t and other related properties

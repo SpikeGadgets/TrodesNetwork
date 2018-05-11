@@ -26,6 +26,9 @@ set(${LIBRARY_TARGET_NAME}_HDR
         include/libTrodesNetwork/trodesmsg.h
 )
 
+set(${LIBRARY_TARGET_NAME}_UTIL
+        ../utility/concurrentqueue.h
+)
 
 # You can add an external dependency using the find_package() function call
 # See: https://cmake.org/cmake/help/latest/command/find_package.html
@@ -53,7 +56,8 @@ add_library(${LIBRARY_TARGET_NAME} ${${LIBRARY_TARGET_NAME}_SRC} ${${LIBRARY_TAR
 # See https://cmake.org/cmake/help/latest/command/set_target_properties.html
 # Properties are: 1) Library version number 2) list of corresponding public headers
 set_target_properties(${LIBRARY_TARGET_NAME} PROPERTIES VERSION       ${${PROJECT_NAME}_VERSION}
-                                                        PUBLIC_HEADER "${${LIBRARY_TARGET_NAME}_HDR}")
+                                                        PUBLIC_HEADER  "${${LIBRARY_TARGET_NAME}_HDR}"
+                                                        PRIVATE_HEADER "${${LIBRARY_TARGET_NAME}_UTIL}")
 
 # Specify include directories for both compilation and installation process.
 # The $<INSTALL_PREFIX> generator expression is useful to ensure to create 
@@ -62,7 +66,8 @@ target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CM
                                                          "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>")
 
 
-
+target_include_directories(${LIBRARY_TARGET_NAME} PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../utility>"
+                                                         "$<INSTALL_INTERFACE:include>")
 
 
 # If you used find_package() you need to use target_include_directories() and/or
@@ -79,6 +84,7 @@ install(TARGETS ${LIBRARY_TARGET_NAME}
         LIBRARY       DESTINATION "${CMAKE_INSTALL_LIBDIR}"                            COMPONENT shlib
         ARCHIVE       DESTINATION "${CMAKE_INSTALL_LIBDIR}"                            COMPONENT lib
         RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}"                            COMPONENT bin
-        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}" COMPONENT dev)
-
+        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}" COMPONENT dev
+        PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"                       COMPONENT dev)
+install(DIRECTORY ../utility/cereal DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS ${LIBRARY_TARGET_NAME})

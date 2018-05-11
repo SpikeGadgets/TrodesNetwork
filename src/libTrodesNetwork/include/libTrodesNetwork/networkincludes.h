@@ -1,25 +1,20 @@
 #ifndef NETWORKINCLUDES_H
 #define NETWORKINCLUDES_H
 // #define __USE_MINGW_ANSI_STDIO 0
-#include <malamute.h>
+// #include <malamute.h>
 #include <string>
 #include <vector>
 #include <set>
 #include <map>
 #include <mutex>
-//#include <memory>
-//#include <array>
-//#include <atomic>
+
 #include "CZHelp.h"
 #include "networkDataTypes.h"
 #include "trodesmsg.h"
 #include "highfreqclasses.h"
 #include "trodesglobaltypes.h"
 
-//*********************************************************
-//NETWORK LEVEL DEFINES
-//*********************************************************
-
+struct _mlm_client_t; typedef _mlm_client_t mlm_client_t;
 //*********************************************************
 //API LEVEL DEFINES
 //*********************************************************

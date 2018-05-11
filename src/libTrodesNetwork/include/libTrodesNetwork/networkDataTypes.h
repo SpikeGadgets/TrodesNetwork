@@ -8,7 +8,7 @@
 #ifndef NETWORKDATATYPES_H
 #define NETWORKDATATYPES_H
 // #define __USE_MINGW_ANSI_STDIO 0
-#include <czmq.h>
+// #include <czmq.h>
 #include "cereal/cereal.hpp"
 #include "cereal/archives/portable_binary.hpp"
 #include "cereal/types/vector.hpp"

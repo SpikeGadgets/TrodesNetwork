@@ -10,13 +10,13 @@
 // #define __USE_MINGW_ANSI_STDIO 0
 #include <iostream>
 #include <cstdlib>
-#include <czmq.h>
 #include <vector>
 #include <type_traits>
 #include <algorithm>
 #include <cctype>
 #include <locale>
 #include "networkDataTypes.h"
+struct _zmsg_t; typedef _zmsg_t zmsg_t;
 
 // //Fix for freeing char*'s on windows. 
 // #if (defined (__WINDOWS__))

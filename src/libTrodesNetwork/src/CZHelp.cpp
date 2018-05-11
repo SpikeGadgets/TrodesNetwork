@@ -7,7 +7,7 @@
 // #define __USE_MINGW_ANSI_STDIO 0
 #include "libTrodesNetwork/CZHelp.h"
 #include <sstream>
-
+#include <czmq.h>
 
 // ****** CZHELP CLASS ******
 //higher lvl wrapper of helper functions for zmq & czmq

@@ -1,5 +1,7 @@
 #include "libTrodesNetwork/networkincludes.h"
 #include <sstream>
+#include <malamute.h>
+
 //Internal #define's for use within this class:
 #define TEMP_NETWORK_ID   "temp"
 //User sends message
