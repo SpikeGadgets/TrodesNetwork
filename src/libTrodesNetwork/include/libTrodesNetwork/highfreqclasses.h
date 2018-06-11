@@ -280,7 +280,7 @@ public:
     std::vector<std::string> getChannelsRequested() const;
 
 private:
-    std::vector<byte> tempinput;
+    std::vector<int16_t> tempinput;
     HFParsingInfo args;
 };
 

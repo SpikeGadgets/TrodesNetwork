@@ -346,7 +346,7 @@ bool AbstractModuleClient::sendGlobalStimulationCommand(GlobalStimulationCommand
 int AbstractModuleClient::processCommandMsg(std::string cmdType, TrodesMsg &msg) {
     int rc = 0;
     if (cmdType == quit_CMD) {
-        std::cout << "Client got quit command.\n";
+        std::cout << "Client " << id << " got quit command.\n";
         recv_quit();
     }
     else if(cmdType == file_CMD){

@@ -456,7 +456,10 @@ timestamp_t LFPConsumer::getData(int16_t *data){
     readData(temp.data(), temp.size()*sizeof(int16_t));
     size_t pos = 0;
     for(size_t i = 0; i < args.indices.size(); i+=2){
-        memcpy(data+pos, temp.data()+args.indices[i], args.indices[i+1]*sizeof(int16_t));
+        // memcpy(data+pos, temp.data()+args.indices[i], args.indices[i+1]*sizeof(int16_t));
+        std::copy(temp.data()+args.indices[i], 
+                  temp.data()+args.indices[i]+args.indices[i+1], 
+                  data+pos);
         pos += args.indices[i+1];
     }
     return {*(uint32_t*)temp.data(), lastSysTimestamp()};
@@ -554,18 +557,18 @@ timestamp_t AnalogConsumer::getData(int16_t *dest){
     int offset = 0;
     int il_i = 0;
     for(size_t i = 0; i < args.indices.size(); i += 2){
-        int byte = args.indices[i];
+        int byt = args.indices[i];
         int bit = args.indices[i+1];
         if(bit == -1){
             //Non interleaved
-            dest[offset] = *(int16_t*)(src+byte);
+            dest[offset] = *(int16_t*)(src+byt);
         }
         else{
             //Interleaved
             //Compare mask[il_i] and packet's il id byte
             if(il_id_masks[il_i] & src[il_byte_loc]){
                 //If packet contains this type of data
-                dest[offset] = *(int16_t*)(src+byte);
+                dest[offset] = *(int16_t*)(src+byt);
                 prev_interleaved[il_i] = dest[offset];
             }
             else{
@@ -637,13 +640,13 @@ timestamp_t DigitalConsumer::getData(int16_t *dest){
     byte *src = temp_buffer.data() + sizeof(uint32_t); // start of digital data is after timestamp
     int offset = 0;
     for(size_t i = 0; i < args.indices.size(); i += 2){
-        int byte = args.indices[i];
-        int bit = args.indices[i+1];
+        const int byt = args.indices[i];
+        const int bit = args.indices[i+1];
         //Unlike the rest, digital data is one bit at a time. May be a waste, but we are converting
         //the 0/1's to int16_t numbers for convenience
         //1<<bit creates mask for bit position, & operation to isolate that bit,
         //shift the bit to the first position to get 0 or 1, store it at the second byte of a int16_t num
-        dest[offset] = (int16_t)((src[byte] & (1 << bit)) >> bit); //Convert to 2byte int
+        dest[offset] = (int16_t)((src[byt] & (1 << bit)) >> bit); //Convert to 2byte int
         ++offset;
     }
     return {*(uint32_t*)(temp_buffer.data()), lastSysTimestamp()}; //Timestamp at beginning of packet
@@ -655,7 +658,7 @@ std::vector<std::string> DigitalConsumer::getChannelsRequested() const{
 
 NeuralConsumer::NeuralConsumer(HighFreqDataType hf, int ringbufsize, HFParsingInfo parseargs)
     : HFSubConsumer(hf, ringbufsize),
-      tempinput(hf.getByteSize(), 0),
+      tempinput(hf.getByteSize()/sizeof(int16_t), 0),
       args(parseargs)
 {
     sockType = ST_FILTERED_CONSUMER;
@@ -666,18 +669,37 @@ NeuralConsumer::~NeuralConsumer(){
 }
 
 void NeuralConsumer::initialize(){
+    std::vector<int> new_indices;
+    int prev = -2;
+    for(auto const &i : args.indices){
+        if(i-prev == 1){//If i is right after previous index
+            new_indices.back()++;
+        }
+        else{//else its a new separate grouping
+            new_indices.push_back(i);
+            new_indices.push_back(1);
+        }
+        prev = i;
+    }
+    for(auto const &i:new_indices) std::cout << "-" << i;
+    std::cout << std::endl;
+    args.indices = new_indices;
     HFSubConsumer::initialize();
 }
 
 timestamp_t NeuralConsumer::getData(int16_t *dest){
-    readData(tempinput.data(), tempinput.size());
-    byte *src = tempinput.data() + sizeof(uint32_t); //timestamp is first
+    readData(tempinput.data(), tempinput.size()*sizeof(int16_t));
+    int16_t *src = tempinput.data() + sizeof(uint32_t)/sizeof(int16_t); //timestamp is first
     int offset = 0;
-    for(auto &i : args.indices){
-        //i is the ith channel. so i*sizeof(int16_t) is the offset after the first one.
-//        memcpy(dst+offset, src + i*sizeof(int16_t), sizeof(int16_t));
-        dest[offset] = *(int16_t*)(src+i*sizeof(int16_t));
-        offset++;
+//     for(const auto &i : args.indices){
+//         //i is the ith channel. so i*sizeof(int16_t) is the offset after the first one.
+// //        memcpy(dst+offset, src + i*sizeof(int16_t), sizeof(int16_t));
+//         dest[offset] = *(int16_t*)(src+i*sizeof(int16_t));
+//         offset++;
+//     }
+    for(unsigned int i = 0; i < args.indices.size(); i+=2){
+        std::copy(src+args.indices[i], src+args.indices[i]+args.indices[i+1], dest+offset);
+        offset += args.indices[i+1];
     }
     return {*(uint32_t*)tempinput.data(), lastSysTimestamp()}; //Timestamp at beginning of packet
 }

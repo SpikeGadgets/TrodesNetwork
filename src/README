@@ -1,6 +1,7 @@
 To install:
 	Python3:
 		Type into terminal the following (you may need root privileges with sudo):
+		(if you already installed this, add --upgrade to the end to update the package)
 		(numpy will be installed if it is not already)
 
 			python3 -m pip install spikegadgets_python/
