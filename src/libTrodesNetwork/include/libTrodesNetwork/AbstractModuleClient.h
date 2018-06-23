@@ -149,7 +149,7 @@ private:
     int processRequestMsg(const char *, std::string reqType, TrodesMsg &);
     int processReplyMsg(std::string repType, TrodesMsg &msg);
     int processNotification(const char *sender, std::string noteType, TrodesMsg &msg);
-
+    int processTimer(int timer_id);
     void initializeStreams();
 
     std::set<std::string> subbedEvents;
@@ -157,6 +157,7 @@ private:
     zsock_t* timestampsub;
     std::string timestampaddress;
     uint32_t lastTimestamp = 0;
+    int64_t lastsysTimestamp = 0;
     bool subToTimestamps(const std::string &address);
     bool unsubToTimestamps();
 };

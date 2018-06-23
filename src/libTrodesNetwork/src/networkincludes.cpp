@@ -1240,7 +1240,8 @@ void MlmWrap::message_reactor_task(zsock_t *pipe, void *args){
     zloop_reader(loop, mlm_client_msgpipe(self->client), MlmWrap::handle_mlm_msgpipe, self);
     //Set reader for pipe for outgoing messages
     zloop_reader(loop, pipe, MlmWrap::handle_usr_msgpipe, self);
-
+    //Set timer that runs every 1 sec for Abstractmoduleclient to utilize
+    zloop_timer(loop, 250, 0, MlmWrap::handle_abs_timer, self);
     //Set variables
     self->reactor = loop;
     self->usrpipe = pipe;
@@ -1606,6 +1607,12 @@ int MlmWrap::handle_usr_msgpipe(zloop_t *loop, zsock_t *reader, void *arg){
     zmsg_destroy(&msg);
     freen(msgtype);
     return rc;
+}
+
+int MlmWrap::handle_abs_timer(zloop_t *loop, int timer_id, void *arg){
+    MlmWrap *self = (MlmWrap*)arg;
+    self->processTimer(timer_id);
+    return 0;
 }
 
 int MlmWrap::block_reply_timeout(zloop_t *loop, int timer_id, void *arg){

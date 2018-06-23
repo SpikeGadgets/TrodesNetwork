@@ -79,7 +79,7 @@ if network.initialize() != 0:
 ################################################################################
 
 #Subscribe to LFP data, from NTrodes 1 and 2
-# datastream = network.subscribeLFPData(100, ['1','2', '5', '6', '7', '8', '10'])
+datastream = network.subscribeLFPData(10, ['1','2', '5', '6', '7', '8', '10'])
 # datastream = network.subscribeLFPData(500, ["{:0d}".format(x) for x in range(1,31)])
 # datastream = network.subscribeSpikesData(100, ['3, 0', '3,1', '8, 0'])
 # datastream = network.subscribeAnalogData(100, ["ECU,Ain1", "headstageSensor,GyroX"])

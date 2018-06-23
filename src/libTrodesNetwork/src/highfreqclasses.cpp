@@ -1,5 +1,6 @@
 #include "libTrodesNetwork/highfreqclasses.h"
 #include <czmq.h>
+#include <time.h>
 
 #define waittimeout     "$WT"
 #define regdt           "$REG"
@@ -30,6 +31,7 @@ int HighFreqPub::initialize(std::string addr, int port) {
     std::string newAddress = front;
     newAddress += "*[" + std::to_string(port) + "-]"; // zsock_bind() takes in a port value of *[p-], which means bind to first available port starting at "p"
     hfPub = zsock_new(ZMQ_PUB);
+    zsock_set_sndhwm(hfPub, 1);
     int aPort = zsock_bind(hfPub, "%s", newAddress.c_str()); //%s just reducing warnings, one at a time
     if(aPort == -1){
         return -1;
@@ -232,7 +234,7 @@ int HFSubConsumer::handle_enqueue(zframe_t *frame){
         return 0;
     }
     //Pseudo ring buffer, pops oldest so that ConcurrentQueue doesn't allocate new block and acts like concurrent ringbuffer
-    if(framequeue.size_approx() == buffersize-1){
+    if(framequeue.size_approx() >= buffersize-1){
         //Do this first before replacing with new frame
         zframe_t* tmp;
         if(framequeue.try_dequeue(replacetoken, tmp)){
@@ -296,12 +298,27 @@ size_t HFSubConsumer::readData(void *dest, size_t size){
 }
 
 size_t HFSubConsumer::available(long timeout){
+    /* attempts at optimization:
+     * 1. if timeout is 0ms, don't even send out polling request
+     * 2. if timeout is 1ms, don't bother sending out polling req, but check queue 4 times
+     *      - this way, worst case added latency is ~0.25ms
+     * 3. else, clear the req-rep polls, send a wait request to other thread
+     */ 
     size_t num = framequeue.size_approx();
-    if(num){
+    if(num || timeout == 0){
         return num;
     }
-//    else if(timeout <= 1){ //TODO: Maybe optimize with this?
-//    }
+#ifdef __linux__
+    else if(timeout == 1){
+        const struct timespec t = {0, 199*1000};
+        for(int i=0; i<5;i++){
+            clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, NULL);
+            if((num=framequeue.size_approx())){
+                return num;
+            }
+        }
+    }
+#endif
     else{
         uint64_t avail;
         //Polling could have timed out last time. First check if there is a message waiting to be grabbed.

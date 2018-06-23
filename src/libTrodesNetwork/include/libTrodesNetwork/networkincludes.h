@@ -233,7 +233,7 @@ protected:
     virtual int processNotification(const char *sender, std::string noteType, TrodesMsg &msg) {return(0);}
 
     virtual int processOtherMsg(const char *sender, const char *subject, TrodesMsg &msg) {std::cout << "Other msg type [" << subject << "] not recognized.\n"; return(0);}
-
+    virtual int processTimer(int timer_id){return 0;}
     //!Subscribes to a stream
     int subscribeStream(const char *stream, const char *pattern);
 
@@ -400,6 +400,7 @@ private:
      */
     static int handle_usr_msgpipe(zloop_t *loop, zsock_t *reader, void *arg);
 
+    static int handle_abs_timer(zloop_t *loop, int timer_id, void *arg);
 
     static int block_reply_timeout(zloop_t *loop, int timer_id, void *arg);
     static int recv_hardware_request(zloop_t *loop, zsock_t *reader, void *arg);

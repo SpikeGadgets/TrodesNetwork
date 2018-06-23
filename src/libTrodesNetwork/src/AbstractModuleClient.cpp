@@ -531,6 +531,36 @@ uint32_t AbstractModuleClient::latestTrodesTimestamp(){
         return 0;
     }
     //If zmq_recv succeeds, lastTimestamp is replaced. if not, the previous value is returned. win-win with no checks needed
-    zmq_recv(zsock_resolve(timestampsub), &lastTimestamp, sizeof(lastTimestamp), ZMQ_DONTWAIT);
+    zmq_msg_t msg;
+    zmq_msg_init(&msg);
+    if(zmq_msg_recv(&msg, zsock_resolve(timestampsub), ZMQ_DONTWAIT) == 12){
+        lastTimestamp = *(uint32_t*)zmq_msg_data(&msg);
+        lastsysTimestamp = *(int64_t*)((byte*)zmq_msg_data(&msg)+4);
+    }
+    zmq_msg_close(&msg);
     return lastTimestamp;
+}
+
+int AbstractModuleClient::processTimer(int timer_id){
+    // zmq_msg_t msg;
+    // zmq_msg_init_size(&msg, sizeof(int64_t)+sizeof(uint32_t));
+    byte buf[12];
+    int rc;
+    for(int i = 0; i < 1000; ++i){
+        // if(zmq_msg_recv(&msg, zsock_resolve(timestampsub), ZMQ_DONTWAIT) == 12){
+        if((rc=zmq_recv(zsock_resolve(timestampsub), buf, 12, ZMQ_DONTWAIT))==12){
+            // lastTimestamp = *(uint32_t*)zmq_msg_data(&msg);
+            // lastsysTimestamp = *(int64_t*)((byte*)zmq_msg_data(&msg)+4);
+            lastTimestamp = *(uint32_t*)buf;
+            lastsysTimestamp = *(int64_t*)(buf+4);
+            
+        }
+        else{
+            // std::cerr << "zmq_msg_recv broke on iteration " << i << " with rc " << rc << std::endl;
+            break;
+        }
+    }
+    // zmq_msg_close(&msg);
+    // std::cerr << "Purged all messages. Timestamp " << lastTimestamp << " " << lastsysTimestamp<< std::endl;
+    return 0;
 }
