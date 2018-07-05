@@ -361,12 +361,14 @@ MlmWrap::~MlmWrap(){
 int MlmWrap::initialize(){
     if (!connected){ //if the broker could not be connected to, try again once
         create(id.c_str(), state->getEndpoint().c_str());
-        if(!connected)
+        if(!connected){
+            std::cerr << error("Client could not be initialized!") << std::endl;
             return -1;
+        }
     }
 
     if(initialized){
-        return 1;
+        return 0;
     }
     actor = zactor_new(&MlmWrap::message_reactor_task, this);
     if(actor && client){ //both actor and client must be successfully created
@@ -381,9 +383,13 @@ int MlmWrap::initialize(){
     }
     else if (actor != NULL) {
         zactor_destroy(&actor);
+        std::cerr << error("Client could not be initialized!") << std::endl;
+        return -2;
     }
-    std::cerr << error("Could not be initialized!") << std::endl;
-    return -1;
+    else{
+        std::cerr << error("Client could not be initialized!") << std::endl;
+        return -1;
+    }
 }
 
 void MlmWrap::getConfigInfo() {
@@ -1863,6 +1869,9 @@ std::string network_pimpl::getEndpoint() const{
 
 void network_pimpl::setEndpoint(const std::string &value){
     endpoint = value;
+    if(endpoint.find("tcp://")==value.npos){
+        endpoint.insert(0, "tcp://");
+    }
 }
 
 std::string network_pimpl::getAddress() const{
