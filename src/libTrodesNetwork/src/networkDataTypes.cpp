@@ -394,17 +394,21 @@ TrodesConfig& TrodesConfig::operator = (const TrodesConfig &obj) {
 
 bool TrodesConfig::isValid() const {
 //    std::cerr << "ISVALID check on TrodesConfig() " << this << "\n";
-    if (devices.empty()) //there must always at least be an MCU
-        return(false);
+    // if (devices.empty()){ //there must always at least be an MCU
+    //     std::cerr << "NO DEVICES\n";
+    //     return(false);
+    // }
 
     for (int i = 0; i < (int)devices.size(); i++) {
-        if (!devices.at(i).isValid()) //check that all devices are valid
+        if (!devices.at(i).isValid()){ //check that all devices are valid
             return(false);
+        }
     }
 
     for (int i = 0; i < (int)nTrodes.size(); i++) {
-        if (!nTrodes.at(i).isValid()) //check that all added nTrodes are valid
+        if (!nTrodes.at(i).isValid()){ //check that all added nTrodes are valid
             return(false);
+        }
     }
     return(true);
 }

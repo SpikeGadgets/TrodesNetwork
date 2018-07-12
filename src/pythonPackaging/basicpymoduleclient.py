@@ -85,7 +85,7 @@ datastream = network.subscribeLFPData(10, ['1','2', '5', '6', '7', '8', '10'])
 # datastream = network.subscribeAnalogData(100, ["ECU,Ain1", "headstageSensor,GyroX"])
 # datastream = network.subscribeDigitalData(100, ["ECU,Din12", "ECU,Din13"])
 # datastream = network.subscribeNeuralData(1000, ['1,1', '1,2', '2,1', '2,2', '3,1'])
-datastream = network.subscribeNeuralData(1000, [str(i+1)+',1' for i in range(32)])
+# datastream = network.subscribeNeuralData(1000, [str(i+1)+',1' for i in range(32)])
 datastream.initialize() #Initialize the streaming object
 # #Assign 'buf' as a numpy array that is tied to the stream object
 buf = datastream.create_numpy_array()
@@ -114,5 +114,7 @@ while stillrunning:
 #Cleanup
 #Must have 'del' calls to properly delete C++ sockets and threads
 #Deleting network automatically deletes all created 
-del network
-quit()
+# del network
+network.closeConnections()
+print("closed connections")
+# quit()

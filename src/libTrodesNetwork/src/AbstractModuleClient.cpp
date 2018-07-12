@@ -16,6 +16,10 @@ AbstractModuleClient::AbstractModuleClient(std::string id, std::string addr, int
 
 
 AbstractModuleClient::~AbstractModuleClient() {
+    this->closeConnections();
+}
+
+void AbstractModuleClient::closeConnections(){
     if(timestampsub)
         zsock_destroy(&timestampsub);
 }
@@ -391,7 +395,7 @@ int AbstractModuleClient::processCommandMsg(std::string cmdType, TrodesMsg &msg)
         default:
             break;
         }
-        std::cerr << "got source " << src_string << "\n";
+        // std::cerr << "got source " << src_string << "\n";
         recv_source(src_string);
     }
     else if(cmdType == acquisition_CMD){

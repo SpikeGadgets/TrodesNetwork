@@ -67,8 +67,11 @@ HighFreqSub::HighFreqSub(HighFreqDataType hf, SubType type)
 }
 
 HighFreqSub::~HighFreqSub(){
-    if(actor)
+    if(actor){
+        zactor_t *a = actor;
         zactor_destroy(&actor);
+        zsock_wait(a);
+    }
     zsock_destroy(&sub);
 }
 
@@ -205,6 +208,7 @@ void HFSubConsumer::ringbufController(zsock_t *pipe, void *args){
     zloop_start(loop);
     zloop_destroy(&loop);
     zsock_destroy(&self->rep);
+    zsock_signal(pipe, 0);
 }
 
 void HFSubConsumer::customCommands(zloop_t *loop, zsock_t *reader, zframe_t *f){
@@ -460,10 +464,10 @@ void LFPConsumer::initialize(){
         }
         prev = i;
     }
-    for(auto const i : newindices) std::cout << "-i" << i;
-    std::cout << std::endl;
+    // for(auto const i : newindices) std::cout << "-i" << i;
+    // std::cout << std::endl;
     args.indices = newindices;
-    std::cout << std::endl;
+    // std::cout << std::endl;
     temp.resize(dt.getByteSize()/sizeof(int16_t));
     HFSubConsumer::initialize();
 }
@@ -698,8 +702,8 @@ void NeuralConsumer::initialize(){
         }
         prev = i;
     }
-    for(auto const &i:new_indices) std::cout << "-" << i;
-    std::cout << std::endl;
+    // for(auto const &i:new_indices) std::cout << "-" << i;
+    // std::cout << std::endl;
     args.indices = new_indices;
     HFSubConsumer::initialize();
 }

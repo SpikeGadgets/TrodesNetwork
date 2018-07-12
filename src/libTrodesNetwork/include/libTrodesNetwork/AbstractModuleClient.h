@@ -22,6 +22,7 @@ public:
     AbstractModuleClient(const char *id, const char* addr, int port);
     ~AbstractModuleClient(void);
 
+    void closeConnections();
 
     /*! \brief subscribeToEvent causes recv_event() to be called whenever a subscribed event is received
      * \param origin The module id that produces the event

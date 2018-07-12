@@ -350,8 +350,16 @@ void MlmWrap::create(const char* _id, const char* e) {
 }
 
 MlmWrap::~MlmWrap(){
-    if(actor)
+    this->close();
+    // this->removeAllSubs();
+}
+
+void MlmWrap::close(){
+    if(actor){
+        zactor_t *a = actor;
         zactor_destroy(&actor);
+        zsock_wait(a);
+    }
     else
         mlm_client_destroy(&client);
     //Destroying actor causes the rest of cleanup to happen in message_reactor_task
@@ -1145,6 +1153,16 @@ int MlmWrap::removeSubFromList(HighFreqDataType subType) {
     return(-1);
 }
 
+void MlmWrap::removeAllSubs(){
+    for (size_t i = 0; i < hfSubs.size(); i++){
+        if(hfSubs.at(i)){
+            HighFreqSub *sub = hfSubs.at(i);
+            delete sub;
+            hfSubs[i] = NULL;
+        }
+    }
+}
+
 //returns ptr to the HighFreqSub with the corresponding 'dataName' and 'originModule'
 //returns NULL if the HighFreqSub does not exist
 HighFreqSub* MlmWrap::getHfSubObject(std::string dataName, std::string originModule) {
@@ -1263,6 +1281,8 @@ void MlmWrap::message_reactor_task(zsock_t *pipe, void *args){
     zloop_destroy(&loop);
     if(self->hardwaresock) zsock_destroy(&self->hardwaresock);
     mlm_client_destroy(&self->client);
+    self->removeAllSubs();
+    zsock_signal(pipe, 0);
 }
 
 int MlmWrap::receiveStream(const char *sender, const char *subject, const char *format, TrodesMsg &msg) {

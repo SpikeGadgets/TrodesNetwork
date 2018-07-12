@@ -322,6 +322,16 @@ class PythonModuleClient : public AbstractModuleClient, public wrapper<AbstractM
 public:
     PythonModuleClient(std::string id, std::string addr, int port) : AbstractModuleClient(id, addr, port){
     }
+    ~PythonModuleClient(){
+        close_python();
+    }
+
+    void close_python(){
+        this->closeConnections();
+        this->close();
+        sleep(1);
+    }
+
     void recv_acquisition(std::string cmd, uint32_t time){
         PyLockGIL lock;
         if(override recv_acquisition = this->get_override("recv_acquisition")){
@@ -487,6 +497,7 @@ public:
         HFParsingInfo parseinfo = createLFPParsingInfo(listToVec<std::string>(l), dt.getDataFormat());
         LFPConsumer_python* newsub = new LFPConsumer_python(dt, buffersize, parseinfo);
         HFSubSockSettings sockinfo(dt, newsub->getSubSockType(), NULL, NULL);
+        addSubToList(newsub);
         addHfTypeToSubbedList(sockinfo);
         return newsub;
     }
@@ -697,6 +708,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
 
         class_<PythonModuleClient, boost::noncopyable>
             ("AbstractModuleClient", init<std::string, std::string, int>())
+            .def("closeConnections", &PythonModuleClient::close_python)
             .def("recv_acquisition", &AbstractModuleClient::recv_acquisition,&PythonModuleClient::default_recv_acquisition)
             .def("recv_file_open", &AbstractModuleClient::recv_file_open,&PythonModuleClient::default_recv_file_open)
             .def("recv_file_close", &AbstractModuleClient::recv_file_close,&PythonModuleClient::default_recv_file_close)

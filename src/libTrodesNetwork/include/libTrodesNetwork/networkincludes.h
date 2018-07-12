@@ -152,6 +152,9 @@ public:
     //! Connects to broker, starts zactor and zloop
     int initialize();
 
+    //! Close all connections
+    void close();
+    
     //! Public accessor to check whether or not the object has been successfully initialized and connected to the network
     bool isInitialized() const;
 
@@ -267,6 +270,7 @@ protected:
     HighFreqDataType getSubbedHfType(std::string dataName, std::string moduleOrigin);
     int addSubToList(HighFreqSub *newSub);
     int removeSubFromList(HighFreqDataType subType); //this will also delete the subscriber
+    void removeAllSubs();
     HighFreqSub* getHfSubObject(std::string dataName, std::string originModule);
     HFSubConsumer *createConsumerSub(HighFreqDataType dt, size_t messageBufferLength);
     HFSubWorker *createWorkerSub(HighFreqDataType dt, int numThreads, hfs_data_callback_fn userFoo, void *args);
