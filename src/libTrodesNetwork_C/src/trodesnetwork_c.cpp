@@ -1,5 +1,5 @@
 #include "libTrodesNetwork/AbstractModuleClient.h"
-
+#include "libTrodesNetwork/trodesglobaltypes.h"
 extern "C"{
     #include "trodesnetwork_c.h"
 }
@@ -64,11 +64,11 @@ void lfp_initialize(LFPConsumer_t* lfp){
     reinterpret_cast<LFPConsumer*>(lfp)->initialize();
 }
 
-timestamp_t lfp_getData(LFPConsumer_t* lfp, int16_t* data){
-    return reinterpret_cast<LFPConsumer*>(lfp)->getData(data);
+uint32_t lfp_getData(LFPConsumer_t* lfp, int16_t* data){
+    return reinterpret_cast<LFPConsumer*>(lfp)->getData(data).trodes_timestamp;
 }
 
-size_t lfp_available(LFPConsumer_t* lfp, long timeout){
+int lfp_available(LFPConsumer_t* lfp, long timeout){
     return reinterpret_cast<LFPConsumer*>(lfp)->available(timeout);
 }
 

@@ -9,7 +9,6 @@ typedef struct AbstractModuleClient_t AbstractModuleClient_t;
 struct LFPConsumer_t;
 typedef struct LFPConsumer_t LFPConsumer_t;
 
-typedef struct timestamp_t timestamp_t;
 
 AbstractModuleClient_t* amc_new(const char* id, const char* addr, int port);
 void                amc_destroy(AbstractModuleClient_t* client);
@@ -29,11 +28,10 @@ int                 amc_getPort(AbstractModuleClient_t* client);
 LFPConsumer_t*      amc_subscribeLFPData(AbstractModuleClient_t* client, int buffersize, const char** ntrodes, int numntrodes);
 
 
-void                 lfp_initialize(LFPConsumer_t* lfp);
-timestamp_t         lfp_getData(LFPConsumer_t* lfp, int16_t* data);
-size_t              lfp_available(LFPConsumer_t* lfp, long timeout);
+void                lfp_initialize(LFPConsumer_t* lfp);
+uint32_t            lfp_getData(LFPConsumer_t* lfp, int16_t* data);
+int                 lfp_available(LFPConsumer_t* lfp, long timeout);
 int64_t             lfp_lastSysTimestamp(LFPConsumer_t* lfp);
-
 
 
 #endif
