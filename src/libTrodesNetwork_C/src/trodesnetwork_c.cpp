@@ -75,3 +75,7 @@ int lfp_available(LFPConsumer_t* lfp, long timeout){
 int64_t lfp_lastSysTimestamp(LFPConsumer_t* lfp){
     return reinterpret_cast<LFPConsumer*>(lfp)->lastSysTimestamp();
 }
+
+int64_t system_time(){
+    return CZHelp::systemTimeMSecs();
+}

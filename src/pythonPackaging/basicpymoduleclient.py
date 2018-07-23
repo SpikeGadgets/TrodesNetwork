@@ -79,7 +79,7 @@ if network.initialize() != 0:
 ################################################################################
 
 #Subscribe to LFP data, from NTrodes 1 and 2
-datastream = network.subscribeLFPData(10, ['1','2', '5', '6', '7', '8', '10'])
+datastream = network.subscribeLFPData(100, ['1','2', '5', '6', '7', '8', '10'])
 # datastream = network.subscribeLFPData(500, ["{:0d}".format(x) for x in range(1,31)])
 # datastream = network.subscribeSpikesData(100, ['3, 0', '3,1', '8, 0'])
 # datastream = network.subscribeAnalogData(100, ["ECU,Ain1", "headstageSensor,GyroX"])
@@ -100,21 +100,18 @@ while stillrunning:
     #Get the number of data points that came in
     n = datastream.available(1000   ) #timeout in ms
     #Go through and grab all the data packets, processing one at a time
-    # print(n)
+    print(n)
     for i in range(n):
         timestamp = datastream.getData() 
-        # print(timestamp.trodes_timestamp)
-        grabbed = grabbed + 1
-        print(numpy.sum(buf))
-    if grabbed >= 1000000:
-        print("time(sec): ", time.monotonic()-start)
-        break
+        print(timestamp.trodes_timestamp, buf)
+        # grabbed = grabbed + 1
+        # print(numpy.sum(buf))
+    # if grabbed >= 15000:
+    #     print("time(sec): ", time.monotonic()-start)
+    #     break
 
 
 #Cleanup
-#Must have 'del' calls to properly delete C++ sockets and threads
-#Deleting network automatically deletes all created 
-# del network
 network.closeConnections()
 print("closed connections")
-# quit()
+quit()

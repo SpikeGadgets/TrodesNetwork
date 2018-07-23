@@ -9,7 +9,7 @@ int main(){
 
     const char *ntrodes[] = {"1", "2", "5", "6", "7", "8", "10"};
     int16_t data[7];
-    LFPConsumer_t *datastream = amc_subscribeLFPData(client, 10, ntrodes, 7);
+    LFPConsumer_t *datastream = amc_subscribeLFPData(client, 100, ntrodes, 7);
     lfp_initialize(datastream);
 
     int i = 0; 
@@ -17,10 +17,10 @@ int main(){
         int n = lfp_available(datastream, 100);
         for(int j = 0; j < n; ++j){
             uint32_t t = lfp_getData(datastream, data);
+            printf("%u\t%lu\t%hd\t%hd\t%hd\t%hd\t%hd\t%hd\t%hd\n", 
+            t, system_time()-lfp_lastSysTimestamp(datastream), 
+            data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
             i++;
-            printf("%u\t%hd\t%hd\t%hd\t%hd\t%hd\t%hd\t%hd\n", 
-            t,data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
-
         }
     }
 

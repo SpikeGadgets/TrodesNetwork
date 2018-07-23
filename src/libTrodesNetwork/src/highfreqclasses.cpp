@@ -31,7 +31,6 @@ int HighFreqPub::initialize(std::string addr, int port) {
     std::string newAddress = front;
     newAddress += "*[" + std::to_string(port) + "-]"; // zsock_bind() takes in a port value of *[p-], which means bind to first available port starting at "p"
     hfPub = zsock_new(ZMQ_PUB);
-    zsock_set_sndhwm(hfPub, 1);
     int aPort = zsock_bind(hfPub, "%s", newAddress.c_str()); //%s just reducing warnings, one at a time
     if(aPort == -1){
         return -1;

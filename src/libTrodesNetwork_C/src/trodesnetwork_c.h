@@ -33,5 +33,6 @@ uint32_t            lfp_getData(LFPConsumer_t* lfp, int16_t* data);
 int                 lfp_available(LFPConsumer_t* lfp, long timeout);
 int64_t             lfp_lastSysTimestamp(LFPConsumer_t* lfp);
 
+int64_t             system_time();
 
 #endif
