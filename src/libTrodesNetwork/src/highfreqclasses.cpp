@@ -4,9 +4,9 @@
 
 #define waittimeout     "$WT"
 #define regdt           "$REG"
-#define regdone         "regdone"
-#define deregdt         "$DEREG"
-#define deregdone       "deregdone"
+#define regdone         "$REGD"
+#define deregdt         "$DRG"
+#define deregdone       "$DRGD"
 //************************************************************
 //High Frequency Pub
 //************************************************************

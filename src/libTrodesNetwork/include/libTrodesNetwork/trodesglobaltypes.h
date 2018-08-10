@@ -82,6 +82,7 @@ struct spikePacket{
     static size_t getMaxByteSize(int numchannels, int pointsperwaveform);
 };
 
+#ifdef __cplusplus
 class StimulationCommand : public NetworkDataType{
 public:
     StimulationCommand();
@@ -248,6 +249,6 @@ private:
     bool enableStimulation;  //must be set to false to program new stim commands, and true to trigger them
 
 };
-
+#endif
 
 #endif // TRODESGLOBALTYPES_H

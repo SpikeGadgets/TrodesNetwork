@@ -3,9 +3,17 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stddef.h>
+
+void quit(void* args){
+    printf("**quitfn\n");
+    *(int*)args = 1;
+}
+
 int main(){
+    int q = 0;
     AbstractModuleClient_t *client = amc_new("C_client", "127.0.0.1", 49152);
     amc_initialize(client);
+    amc_registerRecvQuitFn(client, &quit, &q);
 
     const char *ntrodes[] = {"1", "2", "5", "6", "7", "8", "10"};
     int16_t data[7];
@@ -13,7 +21,7 @@ int main(){
     lfp_initialize(datastream);
 
     int i = 0; 
-    while(i < 15000){
+    while(!q){
         int n = lfp_available(datastream, 100);
         for(int j = 0; j < n; ++j){
             uint32_t t = lfp_getData(datastream, data);
