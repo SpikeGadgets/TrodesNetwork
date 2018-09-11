@@ -1397,14 +1397,16 @@ int MlmWrap::processMlmNetworkNotification(const char *sender, TrodesMsg &msg) {
         if(who != TEMP_NETWORK_ID && who != id && who != BROKER_NETWORK_ID){
             state->insert_client(who);
         }
+        TrodesMsg m("s", who);
+        processNotification(sender, noteType, m);
     }
-    else if(noteType == CLIENT_DISCONNECT_MSG){
+    else if(noteType == CLIENT_DISCONNECT_MSG || noteType == CLIENT_EXPIRED_MSG){
         std::string who = msg.popstr();
         if(who != TEMP_NETWORK_ID && who != id && who != BROKER_NETWORK_ID && state->client_exists(who)){
             state->remove_client(who);
         }
-//        TrodesMsg m("s", who);
-//        processNotification(sender, noteType, m);
+       TrodesMsg m("s", who);
+       processNotification(sender, noteType, m);
     }
     else {
         rc = processNotification(sender, noteType, msg);
@@ -1791,20 +1793,22 @@ int CentralBroker::logging_forward_log(zloop_t *loop, zsock_t *reader, void *arg
         address.assign(zrex_hit(log_regex, 3));
         action.assign(zrex_hit(log_regex, 4));
         TrodesMsg msg;
-        if(streq(action.c_str(), "closed")){
-            msg.addstr(CLIENT_DISCONNECT_MSG);
-            msg.addstr(address);
-            self->brokerHandle->sendNotification(msg);
-        }
-        else if(streq(action.c_str(), "expired")){
-            msg.addstr(CLIENT_EXPIRED_MSG);
-            msg.addstr(address);
-            self->brokerHandle->sendNotification(msg);
-        }
-        else if(streq(action.c_str(), "registering")){
-            msg.addstr(CLIENT_CONNECT_MSG);
-            msg.addstr(address);
-            self->brokerHandle->sendNotification(msg);
+        if(!streq(address.c_str(), TEMP_NETWORK_ID)){
+            if(streq(action.c_str(), "closed")){
+                msg.addstr(CLIENT_DISCONNECT_MSG);
+                msg.addstr(address);
+                self->brokerHandle->sendNotification(msg);
+            }
+            else if(streq(action.c_str(), "expired")){
+                msg.addstr(CLIENT_EXPIRED_MSG);
+                msg.addstr(address);
+                self->brokerHandle->sendNotification(msg);
+            }
+            else if(streq(action.c_str(), "registering")){
+                msg.addstr(CLIENT_CONNECT_MSG);
+                msg.addstr(address);
+                self->brokerHandle->sendNotification(msg);
+            }
         }
     }
     zrex_destroy(&log_regex);

@@ -480,9 +480,9 @@ int AbstractModuleClient::processNotification(const char *, std::string noteType
         auto const who = msg.popstr();
         state->remove_client(who);
     }
-    else{
-        std::cout << "[AMC]: Notification type [" << noteType << "] not recognized.\n";
-    }
+    // else{
+    //     std::cout << "[AMC]: Notification type [" << noteType << "] not recognized.\n";
+    // }
     return rc;
 }
 
@@ -548,7 +548,8 @@ uint32_t AbstractModuleClient::latestTrodesTimestamp(){
 int AbstractModuleClient::processTimer(int timer_id){
     int event;
     size_t eventsize = sizeof(event);
-    zmq_getsockopt (zsock_resolve(timestampsub), ZMQ_EVENTS, &event, &eventsize);
+    if(timestampsub)
+        zmq_getsockopt (zsock_resolve(timestampsub), ZMQ_EVENTS, &event, &eventsize);
     // zmq_msg_t msg;
     // zmq_msg_init_size(&msg, sizeof(int64_t)+sizeof(uint32_t));
     // byte buf[12];

@@ -20,6 +20,10 @@ def stoploop():
 class PythonClient(tnp.AbstractModuleClient):
     def recv_quit(self):
         stoploop()
+    def recv_event(self, origin, event, msg):
+        print(origin, " ", event)
+        if event == "NtrodeChanSelect":
+            print(msg)
 
 
 #Connect and initialize
@@ -29,6 +33,7 @@ if network.initialize() != 0:
     del network
     quit()
 
+network.subscribeToEvent("Trodes", "NtrodeChanSelect")
 
 
 # network.initializeHardwareConnection()
