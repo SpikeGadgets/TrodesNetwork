@@ -27,9 +27,8 @@ set(${LIBRARY_TARGET_NAME}_HDR
         ../libTrodesNetwork/include/libTrodesNetwork/trodesmsg.h
 )
 
-include_directories(boost/include)
 include_directories(../libTrodesNetwork/include)
-add_definitions(-DBOOST_PYTHON_STATIC_LIB -DBOOST_NO_AUTO_PTR)
+add_definitions(-DBOOST_PYTHON_STATIC_LIB)
 
 
 
@@ -57,10 +56,25 @@ target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CM
 
 #*******************
 # Linking libraries
-target_link_libraries(${LIBRARY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/boost/lib/libboost_python3.a)
-target_link_libraries(${LIBRARY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/boost/lib/libboost_numpy3.a)
-target_link_libraries(${LIBRARY_TARGET_NAME} pthread)
-# target_link_libraries(${LIBRARY_TARGET_NAME} ${PYTHON_LIBRARIES})
+if(UNIX)
+        add_definitions(-DBOOST_NO_AUTO_PTR)
+        include_directories(boost/include)
+
+        target_link_libraries(${LIBRARY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/boost/lib/libboost_python3.a)
+        target_link_libraries(${LIBRARY_TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/boost/lib/libboost_numpy3.a)
+        target_link_libraries(${LIBRARY_TARGET_NAME} pthread)
+else()
+        # add_definitions(-DBOOST_ALL_NO_LIB)
+        set(Boost_USE_STATIC_LIBS        ON) # only find static libs
+        set(Boost_USE_MULTITHREADED      ON)
+        # set(Boost_USE_STATIC_RUNTIME     OFF)
+        find_package(Boost 1.65.1 EXACT REQUIRED COMPONENTS python3 numpy3)
+        if(Boost_FOUND)
+                include_directories(${Boost_INCLUDE_DIRS})
+                target_link_libraries(${LIBRARY_TARGET_NAME} ${Boost_LIBRARIES})
+        endif()
+        target_link_libraries(${LIBRARY_TARGET_NAME} ${PYTHON_LIBRARIES})
+endif()
 
 
 #Because python doesn't want the lib prefix for imported libraries
@@ -85,5 +99,9 @@ SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES PREFIX "")
 install(FILES ./testnetwork.py DESTINATION tests)
 install(FILES ./setup.py DESTINATION spikegadgets_python)
 install(FILES __init__.py DESTINATION spikegadgets_python/spikegadgets)
-install(TARGETS ${LIBRARY_TARGET_NAME} EXPORT ${PROJECT_NAME} LIBRARY DESTINATION spikegadgets_python/spikegadgets)
+if(WIN32)
+        install(TARGETS ${LIBRARY_TARGET_NAME} EXPORT ${PROJECT_NAME} RUNTIME DESTINATION spikegadgets_python/spikegadgets)
+else()
+        install(TARGETS ${LIBRARY_TARGET_NAME} EXPORT ${PROJECT_NAME} LIBRARY DESTINATION spikegadgets_python/spikegadgets)
+endif()
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS ${LIBRARY_TARGET_NAME})
