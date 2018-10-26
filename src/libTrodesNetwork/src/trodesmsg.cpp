@@ -1,5 +1,5 @@
-#include "libTrodesNetwork/trodesmsg.h"
 #include <czmq.h>
+#include "libTrodesNetwork/trodesmsg.h"
 TrodesMsg::TrodesMsg()
 {
     msg = zmsg_new();

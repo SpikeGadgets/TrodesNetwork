@@ -14,6 +14,11 @@
 #include "highfreqclasses.h"
 #include "trodesglobaltypes.h"
 
+//Fix for freeing char*'s on windows.
+#if (defined (_WIN32))
+#undef freen
+#define freen(x) do {zstr_free(&x);} while(0)
+#endif
 struct _mlm_client_t; typedef _mlm_client_t mlm_client_t;
 //*********************************************************
 //API LEVEL DEFINES

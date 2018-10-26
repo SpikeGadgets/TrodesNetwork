@@ -1,6 +1,6 @@
-#include "libTrodesNetwork/highfreqclasses.h"
 #include <czmq.h>
 #include <time.h>
+#include "libTrodesNetwork/highfreqclasses.h"
 
 #define waittimeout     "$WT"
 #define regdt           "$REG"

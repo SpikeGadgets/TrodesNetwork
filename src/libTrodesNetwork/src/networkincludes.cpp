@@ -1,6 +1,6 @@
-#include "libTrodesNetwork/networkincludes.h"
 #include <sstream>
 #include <malamute.h>
+#include "libTrodesNetwork/networkincludes.h"
 
 //Internal #define's for use within this class:
 #define TEMP_NETWORK_ID   "temp"
@@ -1729,6 +1729,7 @@ CentralBroker::~CentralBroker() {
     zactor_destroy(&logger);
     delete brokerHandle;
     zactor_destroy(&broker);
+    zsys_shutdown();
 }
 
 std::string CentralBroker::getEndpoint() const{

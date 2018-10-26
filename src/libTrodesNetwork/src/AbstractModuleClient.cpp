@@ -1,5 +1,5 @@
-#include "libTrodesNetwork/AbstractModuleClient.h"
 #include <czmq.h>
+#include "libTrodesNetwork/AbstractModuleClient.h"
 AbstractModuleClient::AbstractModuleClient(const char* id, const char* addr, int port)
     : MlmWrap(id, addr, port),timestampsub(NULL) {
     if (isConnectedToBroker()) {

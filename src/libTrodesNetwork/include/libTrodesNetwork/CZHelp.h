@@ -18,10 +18,11 @@
 #include "networkDataTypes.h"
 struct _zmsg_t; typedef _zmsg_t zmsg_t;
 
-// //Fix for freeing char*'s on windows. 
-// #if (defined (__WINDOWS__))
-// #define freen(x) do {zstr_free(&x); x = NULL;} while(0)
-// #endif
+ //Fix for freeing char*'s on windows.
+ #if (defined (_WIN32))
+#undef freen
+ #define freen(x) do {zstr_free(&x); x = NULL;} while(0)
+ #endif
 class binarydata;
 //class NetworkDataType;
 

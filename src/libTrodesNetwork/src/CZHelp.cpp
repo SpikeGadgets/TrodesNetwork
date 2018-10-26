@@ -5,9 +5,9 @@
  * Created on August 28, 2017, 2:40 PM
  */
 // #define __USE_MINGW_ANSI_STDIO 0
-#include "libTrodesNetwork/CZHelp.h"
 #include <sstream>
 #include <czmq.h>
+#include "libTrodesNetwork/CZHelp.h"
 
 // ****** CZHELP CLASS ******
 //higher lvl wrapper of helper functions for zmq & czmq
