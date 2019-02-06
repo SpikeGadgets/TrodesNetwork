@@ -107,7 +107,7 @@ HFSubConsumer* AbstractModuleClient::subscribeHighFreqData(std::string dataName,
         return( createConsumerSub( state->find_hfdt(dataName, originModule), messageBufferLength ) );
     }
     else {
-        std::cerr << error("The specified type does not exist.\n");
+        // std::cerr << error("The specified type does not exist.\n");
         return(NULL);
     }
 }
@@ -123,7 +123,7 @@ HFSubWorker* AbstractModuleClient::subscribeHighFreqData(std::string dataName, s
         return( createWorkerSub( state->find_hfdt(dataName, originModule), 1, userFoo, args ) );
     }
     else {
-        std::cerr << error("The specified type does not exist. Could not create Subscriber\n");
+        // std::cerr << error("The specified type does not exist. Could not create Subscriber\n");
         return(NULL);
     }
 }
@@ -266,7 +266,7 @@ AnalogConsumer* AbstractModuleClient::subscribeAnalogData(size_t buffersize, std
     }
     HighFreqDataType dt = state->find_hfdt(hfType_ANALOG, TRODES_NETWORK_ID);
     if(!dt.isValid()){
-        std::cerr << error("Analog data could not be found on th enetwork!");
+        // std::cerr << error("Analog data could not be found on the network!");
         return NULL;
     }
     HFParsingInfo parseinfo = createAnalogParsingInfo(channels, dt.getDataFormat());
@@ -350,7 +350,7 @@ bool AbstractModuleClient::sendGlobalStimulationCommand(GlobalStimulationCommand
 int AbstractModuleClient::processCommandMsg(std::string cmdType, TrodesMsg &msg) {
     int rc = 0;
     if (cmdType == quit_CMD) {
-        std::cout << "Client " << id << " got quit command.\n";
+        // std::cout << "Client " << id << " got quit command.\n";
         recv_quit();
     }
     else if(cmdType == file_CMD){
@@ -404,9 +404,9 @@ int AbstractModuleClient::processCommandMsg(std::string cmdType, TrodesMsg &msg)
         msg.popcontents("s4",type,timestamp);
         recv_acquisition(type, timestamp);
     }
-    else{
-        std::cout << "[AMC]: Trodes Command [" << cmdType << "] not recognized.\n";
-    }
+    // else{
+    //     std::cout << "[AMC]: Trodes Command [" << cmdType << "] not recognized.\n";
+    // }
     return rc;
 }
 
@@ -419,7 +419,7 @@ int AbstractModuleClient::processEventMsg(const char *sender, const char *event,
 
 int AbstractModuleClient::processRequestMsg(const char *, std::string reqType, TrodesMsg &) {
     int rc = 0;
-    std::cout << "[AMC]: Request type [" << reqType << "] not recognized.\n";
+    // std::cout << "[AMC]: Request type [" << reqType << "] not recognized.\n";
     return rc;
 }
 
@@ -447,9 +447,9 @@ int AbstractModuleClient::processReplyMsg(std::string repType, TrodesMsg &msg) {
         state->decode(statedata);
         subToTimestamps(state->getTimestamp_endpoint());
     }
-    else {
-        std::cout << "[AMC]: Reply type [" << repType << "] not recognized.\n";
-    }
+    // else {
+    //     std::cout << "[AMC]: Reply type [" << repType << "] not recognized.\n";
+    // }
     return rc;
 }
 
@@ -550,25 +550,5 @@ int AbstractModuleClient::processTimer(int timer_id){
     size_t eventsize = sizeof(event);
     if(timestampsub)
         zmq_getsockopt (zsock_resolve(timestampsub), ZMQ_EVENTS, &event, &eventsize);
-    // zmq_msg_t msg;
-    // zmq_msg_init_size(&msg, sizeof(int64_t)+sizeof(uint32_t));
-    // byte buf[12];
-    // int rc;
-    // for(int i = 0; i < 1000; ++i){
-    //     // if(zmq_msg_recv(&msg, zsock_resolve(timestampsub), ZMQ_DONTWAIT) == 12){
-    //     if((rc=zmq_recv(zsock_resolve(timestampsub), buf, 12, ZMQ_DONTWAIT))==12){
-    //         // lastTimestamp = *(uint32_t*)zmq_msg_data(&msg);
-    //         // lastsysTimestamp = *(int64_t*)((byte*)zmq_msg_data(&msg)+4);
-    //         lastTimestamp = *(uint32_t*)buf;
-    //         lastsysTimestamp = *(int64_t*)(buf+4);
-            
-    //     }
-    //     else{
-    //         // std::cerr << "zmq_msg_recv broke on iteration " << i << " with rc " << rc << std::endl;
-    //         break;
-    //     }
-    // }
-    // zmq_msg_close(&msg);
-    // std::cerr << "Purged all messages. Timestamp " << lastTimestamp << " " << lastsysTimestamp<< std::endl;
     return 0;
 }
