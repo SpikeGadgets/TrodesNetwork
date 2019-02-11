@@ -6,11 +6,12 @@
 # make -j8
 # make install
 # Then copy over static libraries into zmq/lib/static and dynamics into zmq/lib
-if(MSVC)
-    link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libzmq.lib)
-    link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libczmq.lib)
-    link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libmlm.lib)
-elseif(WIN32)
+# if(MSVC)
+#     link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libzmq.lib)
+#     link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libczmq.lib)
+#     link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libmlm.lib)
+# elseif(WIN32)
+if(WIN32)
     find_package(libzmq REQUIRED)
     IF (LIBZMQ_FOUND)
         include_directories(${LIBZMQ_INCLUDE_DIRS})
@@ -44,6 +45,14 @@ elseif(WIN32)
         ${CZMQ_LIBRARIES}
         ${MALAMUTE_LIBRARIES}
     )
+    add_definitions(-DZMQ_STATIC)
+    add_definitions(-DCZMQ_STATIC)
+    # target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE MLM_STATIC)
+    link_libraries(${LIBRARY_TARGET_NAME} wsock32 ws2_32 Iphlpapi)
+    # link_libraries(-Wl,--whole-archive ${CMAKE_INSTALL_PREFIX}/lib/libzmq.dll.a -Wl,--no-whole-archive)
+    # link_libraries(-Wl,--whole-archive ${CMAKE_INSTALL_PREFIX}/lib/libczmq.dll.a -Wl,--no-whole-archive)
+    # link_libraries(-Wl,--whole-archive ${CMAKE_INSTALL_PREFIX}/lib/libmlm.dll.a -Wl,--no-whole-archive)
+
 else()
     link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libzmq.a -Wl,--no-whole-archive)
     link_libraries(-Wl,--whole-archive ${CMAKE_CURRENT_SOURCE_DIR}/zmq/lib/static/libczmq.a -Wl,--no-whole-archive)

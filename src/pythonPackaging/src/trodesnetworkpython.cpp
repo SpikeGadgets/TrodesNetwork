@@ -5,7 +5,10 @@
 #include "libTrodesNetwork/networkincludes.h"
 using namespace boost::python;
 namespace np = boost::python::numpy;
-
+#ifdef _WIN32
+#include <windows.h>
+#define sleep(x) Sleep(x)
+#endif
 /*
 This RAII structure ensures that threads created on the native C side
 adhere to the laws of Python and ensure they grab the GIL lock when
@@ -317,6 +320,47 @@ public:
     }
 };
 
+#if(_MSC_VER == 1900)
+namespace boost
+{
+    template <>
+    LFPConsumer_python const volatile * get_pointer<class LFPConsumer_python const volatile >(
+      class LFPConsumer_python const volatile *c)
+    {
+        return c;
+    }
+    template <>
+    NeuralConsumer_python const volatile * get_pointer<class NeuralConsumer_python const volatile >(
+      class NeuralConsumer_python const volatile *c)
+    {
+        return c;
+    }
+    template <>
+    DigitalConsumer_python const volatile * get_pointer<class DigitalConsumer_python const volatile >(
+      class DigitalConsumer_python const volatile *c)
+    {
+        return c;
+    }
+    template <>
+    AnalogConsumer_python const volatile * get_pointer<class AnalogConsumer_python const volatile >(
+      class AnalogConsumer_python const volatile *c)
+    {
+        return c;
+    }
+    template <>
+    SpikesConsumer_python const volatile * get_pointer<class SpikesConsumer_python const volatile >(
+      class SpikesConsumer_python const volatile *c)
+    {
+        return c;
+    }
+    template <>
+    HFSubConsumer const volatile * get_pointer<class HFSubConsumer const volatile >(
+      class HFSubConsumer const volatile *c)
+    {
+        return c;
+    }
+}
+#endif
 //http://www.boost.org/doc/libs/1_65_1/libs/python/doc/html/reference/high_level_components/boost_python_wrapper_hpp.html
 class PythonModuleClient : public AbstractModuleClient, public wrapper<AbstractModuleClient>{
 public:

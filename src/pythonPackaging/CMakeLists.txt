@@ -66,19 +66,27 @@ if(UNIX)
 else()
         # add_definitions(-DBOOST_ALL_NO_LIB)
         set(Boost_USE_STATIC_LIBS        ON) # only find static libs
-        set(Boost_USE_MULTITHREADED      ON)
+        # set(Boost_USE_MULTITHREADED      ON)
         # set(Boost_USE_STATIC_RUNTIME     OFF)
         find_package(Boost 1.65.1 EXACT REQUIRED COMPONENTS python3 numpy3)
         if(Boost_FOUND)
+                message("Found Boost: " ${Boost_LIBRARIES})
                 include_directories(${Boost_INCLUDE_DIRS})
                 target_link_libraries(${LIBRARY_TARGET_NAME} ${Boost_LIBRARIES})
         endif()
         target_link_libraries(${LIBRARY_TARGET_NAME} ${PYTHON_LIBRARIES})
+
+        target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE BOOST_PYTHON_STATIC_LIB)
+        target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE BOOST_NUMPY_STATIC_LIB)
+
 endif()
 
 
 #Because python doesn't want the lib prefix for imported libraries
 SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES PREFIX "")
+if(MSVC)
+    SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES SUFFIX ".pyd")
+endif()
 
 
 # If you used find_package() you need to use target_include_directories() and/or
@@ -99,8 +107,9 @@ SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES PREFIX "")
 install(FILES ./testnetwork.py DESTINATION tests)
 install(FILES ./setup.py DESTINATION spikegadgets_python)
 install(FILES __init__.py DESTINATION spikegadgets_python/spikegadgets)
-if(WIN32)
+if(MSVC)
         install(TARGETS ${LIBRARY_TARGET_NAME} EXPORT ${PROJECT_NAME} RUNTIME DESTINATION spikegadgets_python/spikegadgets)
+        install(FILES ../zmq/msvc64/czmq.dll ../zmq/msvc64/libmlm.dll DESTINATION spikegadgets_python/spikegadgets)
 else()
         install(TARGETS ${LIBRARY_TARGET_NAME} EXPORT ${PROJECT_NAME} LIBRARY DESTINATION spikegadgets_python/spikegadgets)
 endif()

@@ -69,7 +69,6 @@ target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CM
 target_include_directories(${LIBRARY_TARGET_NAME} PRIVATE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../utility>"
                                                          "$<INSTALL_INTERFACE:include>")
 
-
 # If you used find_package() you need to use target_include_directories() and/or
 # target_link_libraries(). As explained previously, depending on the imported
 # objects, you may need to call either or both:
