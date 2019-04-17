@@ -286,7 +286,21 @@ void AbstractModuleClient::sendAnnotationRequest(std::string msg){
 
 bool AbstractModuleClient::initializeHardwareConnection(){
     subscribeStream(TRODES_NETWORK_ID, hardware_update);
-    return init_hardware_connection();
+    if(init_hardware_connection()){
+        //success, ask for hardware settings.
+        TrodesMsg m;
+        m.addcontents("s", "GETSETTINGS");
+        if(sendHardwareMessage(m)){
+            //success with get settings
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
 }
 
 void AbstractModuleClient::destroyHardwareConnection(){

@@ -727,7 +727,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def("available", &AnalogConsumer_python::available)
             .def("create_numpy_array", &AnalogConsumer_python::create_numpy_array)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
-            .def("getChannelsRequested", &AnalogConsumer_python::getChannelsRequested)
+            .def("getChannelsRequested", &AnalogConsumer::getChannelsRequested)
             ;
 
     class_<DigitalConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
@@ -737,7 +737,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def("available", &DigitalConsumer_python::available)
             .def("create_numpy_array", &DigitalConsumer_python::create_numpy_array)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
-            .def("getChannelsRequested", &DigitalConsumer_python::getChannelsRequested)
+            .def("getChannelsRequested", &DigitalConsumer::getChannelsRequested)
             ;
 
     class_<NeuralConsumer_python, bases<HFSubConsumer_python>, boost::noncopyable>
@@ -747,7 +747,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
             .def("available", &NeuralConsumer_python::available)
             .def("create_numpy_array", &NeuralConsumer_python::create_numpy_array)
             .def("lastSysTimestamp", &HFSubConsumer::lastSysTimestamp)
-            .def("getChannelsRequested", &NeuralConsumer_python::getChannelsRequested)
+            .def("getChannelsRequested", &NeuralConsumer::getChannelsRequested)
             ;
 
     class_<PythonModuleClient, boost::noncopyable>

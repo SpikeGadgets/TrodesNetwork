@@ -33,10 +33,10 @@ if network.initialize() != 0:
     del network
     quit()
 
-network.subscribeToEvent("Trodes", "NtrodeChanSelect")
+# network.subscribeToEvent("Trodes", "NtrodeChanSelect")
 
 
-# network.initializeHardwareConnection()
+network.initializeHardwareConnection()
 
 # network.sendSettleCommand()
 # s = tnp.StimulationCommand()
@@ -84,12 +84,12 @@ network.subscribeToEvent("Trodes", "NtrodeChanSelect")
 ################################################################################
 
 #Subscribe to LFP data, from NTrodes 1 and 2
-datastream = network.subscribeLFPData(100, ['1','2', '5', '6', '7', '8', '10'])
+# datastream = network.subscribeLFPData(100, ['1','2', '5', '6', '7', '8', '10'])
 # datastream = network.subscribeLFPData(500, ["{:0d}".format(x) for x in range(1,31)])
 # datastream = network.subscribeSpikesData(100, ['3, 0', '3,1', '8, 0'])
 # datastream = network.subscribeAnalogData(100, ["ECU,Ain1", "headstageSensor,GyroX"])
 # datastream = network.subscribeDigitalData(100, ["ECU,Din12", "ECU,Din13"])
-# datastream = network.subscribeNeuralData(1000, ['1,1', '1,2', '2,1', '2,2', '3,1'])
+datastream = network.subscribeNeuralData(1000, ['1,1', '1,2', '2,1', '2,2', '3,1'])
 # datastream = network.subscribeNeuralData(1000, [str(i+1)+',1' for i in range(32)])
 datastream.initialize() #Initialize the streaming object
 # #Assign 'buf' as a numpy array that is tied to the stream object
@@ -105,7 +105,7 @@ while stillrunning:
     #Get the number of data points that came in
     n = datastream.available(1000   ) #timeout in ms
     #Go through and grab all the data packets, processing one at a time
-    print(n)
+    # print(n)
     for i in range(n):
         timestamp = datastream.getData() 
         print(timestamp.trodes_timestamp, buf)

@@ -82,6 +82,13 @@ std::string CZHelp::trim_copy(std::string s) {
     return s;
 }
 
+// is integer
+bool CZHelp::is_integer(const std::string &s){
+    char* p;
+    strtol(s.c_str(), &p, 10);
+    return *p == 0;
+}
+
 //template<typename T>
 //bool CZHelp::serialize_object(const T &obj, std::string &data){
 //    try{

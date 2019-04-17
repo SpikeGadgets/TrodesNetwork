@@ -294,6 +294,7 @@ public:
 
     void addNTrode(NTrodeObj newNTrode);
     NTrodeObj getNTrode(int index) const;
+    NTrodeObj getNTrodeByID(const std::string &id) const;
     void removeNTrodeAt(int index);
 
     std::string getPrintStr(int indent = 0);

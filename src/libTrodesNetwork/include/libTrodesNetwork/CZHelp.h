@@ -102,6 +102,9 @@ public:
 
     //! trim whitespace from both ends (copying)
     static std::string trim_copy(std::string s);
+
+    //! Is number
+    static bool is_integer(const std::string &s);
 };
 
 #endif /* CZHELP_H */

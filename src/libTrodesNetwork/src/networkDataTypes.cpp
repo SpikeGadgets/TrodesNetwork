@@ -502,6 +502,15 @@ NTrodeObj TrodesConfig::getNTrode(int index) const{
     return(nTrodes[index]);
 }
 
+NTrodeObj TrodesConfig::getNTrodeByID(const std::string &id) const{
+    for(auto const &nt : nTrodes){
+        if(nt.getId() == id){
+            return nt;
+        }
+    }
+    return NTrodeObj();
+}
+
 void TrodesConfig::removeNTrodeAt(int index){
     if (index >= (int)nTrodes.size()) {
         return;

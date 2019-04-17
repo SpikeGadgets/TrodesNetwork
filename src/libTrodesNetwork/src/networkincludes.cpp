@@ -621,21 +621,50 @@ HFParsingInfo MlmWrap::createNeuralParsingInfo(std::vector<std::string> channels
     for(auto &channel : channels){
         //Should be "ntrode id, nth channel"
         size_t i;
-        int nt = -1, ch = -1;
-        try{ //Get ntrode and channel number
-            nt = std::stoi(channel, &i);
-            ch = std::stoi(channel.substr(i+1));
-        }catch(...){
-            std::cerr << error("Could not parse ") << channel << "\n";
+        // int nt = -1, ch = -1;
+        // nt = std::stoi(channel, &i);
+        // ch = std::stoi(channel.substr(i+1));
+        auto found = channel.find(",");
+        if(found == std::string::npos){
+            continue;
+        }
+        
+        std::string ntstr, chstr;
+        ntstr = CZHelp::trim_copy(channel.substr(0, channel.find(",")));
+        chstr = CZHelp::trim_copy(channel.substr(channel.find(",")+1));
+
+        NTrodeObj nt = config.getNTrodeByID(ntstr);
+        if(!nt.isValid()){
+            std::cerr << error("Could not find hw_chan at ntrode ") << ntstr << " " << chstr << "th channel.\n";
             return HFParsingInfo();
         }
-        try{ //Get hwchan number and add to list
-            info.indices.push_back(config.getNTrode(nt-1).getHWChan(ch-1));
+        if(chstr == "*"){
+            for(int i = 0; i < nt.getHw_chans().size(); ++i){
+                info.indices.push_back(nt.getHWChan(i));
+                info.dataRequested.push_back(ntstr+", "+std::to_string(i));
+            }
         }
-        catch(const std::out_of_range& oor){
-            std::cerr << error("Could not find hw_chan at ntrode ") << nt << " " << ch << "th channel.\n";
+        else if(CZHelp::is_integer(chstr)){
+            int ch = std::stoi(chstr);
+            if(ch < 0 || ch >= nt.getHw_chans().size()){
+                std::cerr << error("Invalid hw chan ") << ch << "\n";
+                return HFParsingInfo();
+            }
+            info.indices.push_back(nt.getHWChan(std::stoi(chstr)));
+            info.dataRequested.push_back(ntstr + ", " + chstr);
+        }
+        else{
+            std::cerr << error("Problem with hw channel string ") << chstr << "\n";
             return HFParsingInfo();
         }
+
+        // try{ //Get hwchan number and add to list
+        //     info.indices.push_back(config.getNTrode(nt-1).getHWChan(ch-1));
+        // }
+        // catch(const std::out_of_range& oor){
+        //     std::cerr << error("Could not find hw_chan at ntrode ") << nt << " " << ch << "th channel.\n";
+        //     return HFParsingInfo();
+        // }
     }
     info.sizeOf = info.indices.size()*sizeof(int16_t);
     return info;
@@ -1247,7 +1276,7 @@ bool MlmWrap::sendHardwareMessage(TrodesMsg &msg){
     m = zmsg_recv(hardwaresock);
     //--UNFINISHED HARDWARE
     //Check for success or fail
-    std::cerr << "Hardware message received by Trodes (not hardware): " << zmsg_popstr(m) << "\n";
+    std::cerr << "Hardware message received by Trodes (not hardware): " << zmsg_popstr(m) << std::endl;
 
     return true; //TODO: return success/failure
 }
@@ -1677,7 +1706,8 @@ int MlmWrap::recv_hardware_request(zloop_t *loop, zsock_t *reader, void *arg){
     zmsg_t *reply = zmsg_new();
     zmsg_addstr(reply, sender);
     zmsg_add(reply, zframe_new_empty());
-    zmsg_addstr(reply, tmsg.popstr().c_str());
+    for(int i = 0; i < tmsg.numContents(); ++i)
+        zmsg_addstr(reply, tmsg.popstr().c_str());
     zmsg_send(&reply, reader);
     return 0;
 }
