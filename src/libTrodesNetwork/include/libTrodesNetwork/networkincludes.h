@@ -433,6 +433,7 @@ public:
     std::string getEndpoint() const;
     std::string getAddress() const;
     int getPort() const;
+    bool isInitialized() const;
 
 private:
     zactor_t *broker;
@@ -442,6 +443,8 @@ private:
     std::string endpoint;
     std::string address;
     int port;
+    bool initialized;
+
     static void logging_reactor_task(zsock_t *pipe, void *args);
     static int logging_shutdown_pipe(zloop_t *loop, zsock_t *reader, void *arg);
     static int logging_forward_log(zloop_t *loop, zsock_t *reader, void *arg);
@@ -456,7 +459,7 @@ private:
 class BrokerClient : public MlmWrap {
 public:
     BrokerClient(const char *id, const char *addr, int port, zactor_t *broker = NULL);
-    void start();
+    bool start();
     void sendNotification(TrodesMsg& msg);
     ~BrokerClient(void);
 

@@ -21,9 +21,9 @@ class PythonClient(tnp.AbstractModuleClient):
     def recv_quit(self):
         stoploop()
     def recv_event(self, origin, event, msg):
-        print(origin, " ", event)
-        if event == "NtrodeChanSelect":
-            print(msg)
+        print(origin, " ", event, ' ', msg)
+        # if event == "NtrodeChanSelect":
+            # print(msg)
 
 
 #Connect and initialize
@@ -34,7 +34,7 @@ if network.initialize() != 0:
     quit()
 
 # network.subscribeToEvent("Trodes", "NtrodeChanSelect")
-
+# network.sendMsgToModule('StateScript', 'StatescriptCommand', 's', ['commandhere'])
 
 network.initializeHardwareConnection()
 

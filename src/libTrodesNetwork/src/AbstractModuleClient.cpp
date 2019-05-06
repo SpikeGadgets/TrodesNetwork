@@ -361,6 +361,12 @@ bool AbstractModuleClient::sendGlobalStimulationCommand(GlobalStimulationCommand
     return sendHardwareMessage(m);
 }
 
+bool AbstractModuleClient::sendStateScriptShortcutMessage(uint16_t function){
+    TrodesMsg m;
+    m.addcontents("s2", "SCTRIG", function);
+    return sendHardwareMessage(m);
+}
+
 int AbstractModuleClient::processCommandMsg(std::string cmdType, TrodesMsg &msg) {
     int rc = 0;
     if (cmdType == quit_CMD) {

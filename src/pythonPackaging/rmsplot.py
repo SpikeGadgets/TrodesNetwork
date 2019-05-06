@@ -1,5 +1,3 @@
-#Ctrl+Shift+R to run highlighted code
-
 #Libraries
 from spikegadgets import trodesnetwork as tnp
 
@@ -39,22 +37,32 @@ timestamp = 0
 i = 0
 fig, ax = plt.subplots()
 rms = plt.bar(range(buf.shape[0]), numpy.zeros(buf.shape[0]))
-# r = numpy.std(histbuf, axis=0)
+r = numpy.std(histbuf, axis=0)
 for j in range(len(rms)):
     rms[j].set_height(r[j])
 
-# plt.xlim(-1, 16)
-plt.ylim(0, 100)
+axamp = plt.axes([0.20, 0.03, .65, 0.03])
+
+samp = Slider(axamp, 'Y-lim (µV)', 0.1, 50.0, valinit=45.0)
+
 labels =  datastream.getChannelsRequested() 
 ax.set_xticks(range(len(buf)))
 ax.set_xticklabels(labels)
+ax.set_ylim(0, 50)
+ax.set_ylabel('Root Mean Square Volatage (µV)')
+def update(val):
+    ax.set_ylim(0, val)
+
+samp.on_changed(update)
+
 plt.show(False)
+fig.canvas.draw()
 
 
 #Continuously get data until Trodes tells us to quit
 while stillrunning:
     #Get the number of data points that came in
-    n = datastream.available(1000) #timeout in ms
+    n = datastream.available(50) #timeout in ms
     #Go through and grab all the data packets, processing one at a time
     for z in range(n):
         timestamp = datastream.getData()
@@ -67,7 +75,7 @@ while stillrunning:
                 rms[j].set_height(r[j])
             fig.canvas.draw()
             # print(timestamp.trodes_timestamp, buf)
-
+    plt.pause(0.0001)
 
 #Cleanup
 network.closeConnections()

@@ -1728,6 +1728,7 @@ CentralBroker::CentralBroker(const char* address, int port) {
 }
 
 void CentralBroker::create(const char *endP){
+    initialized = false;
     endpoint.assign(endP);
 
     broker = zactor_new(mlm_server, NULL);
@@ -1749,14 +1750,19 @@ void CentralBroker::create(const char *endP){
 
     //Start broker client
     brokerHandle = new BrokerClient(BROKER_NETWORK_ID, address.c_str(), port, broker);
-    brokerHandle->start();
+    if(!brokerHandle->start()){
+        return;
+    }
 
     //Create thread for Broker Client that forwards logs to itself and parses it
     //TODO: just integrate this into the BrokerClient class
     logger = zactor_new(&CentralBroker::logging_reactor_task, this);
+    initialized = true;
 }
 CentralBroker::~CentralBroker() {
-    zactor_destroy(&logger);
+    if(initialized){
+        zactor_destroy(&logger);
+    }
     delete brokerHandle;
     zactor_destroy(&broker);
     zsys_shutdown();
@@ -1774,6 +1780,11 @@ std::string CentralBroker::getAddress() const
 int CentralBroker::getPort() const
 {
     return port;
+}
+
+bool CentralBroker::isInitialized() const
+{
+    return initialized;
 }
 
 void CentralBroker::logging_reactor_task(zsock_t *pipe, void *args){
@@ -1859,9 +1870,15 @@ BrokerClient::~BrokerClient() {
 
 }
 
-void BrokerClient::start(){
-    initialize();
-    setProducer(TRODES_NETWORK_ID);
+bool BrokerClient::start(){
+    if(initialize()){
+        //Could not initialize! 
+        return false;
+    }
+    if(setProducer(TRODES_NETWORK_ID)){
+        return false;
+    }
+    return true;
 }
 
 void BrokerClient::sendNotification(TrodesMsg &msg){

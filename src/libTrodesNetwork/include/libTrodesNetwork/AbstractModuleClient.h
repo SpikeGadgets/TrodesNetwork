@@ -131,6 +131,9 @@ public:
     //! \brief send globalstimulationcommand
     bool sendGlobalStimulationCommand(GlobalStimulationCommand command);
 
+    //! \brief send ecu shortcut function trigger
+    bool sendStateScriptShortcutMessage(uint16_t function);
+
     //Variable names omitted to avoid a million compile warnings of parameter unused
     virtual void recv_file_open  (std::string){} //(filename)
     virtual void recv_file_close (){}
