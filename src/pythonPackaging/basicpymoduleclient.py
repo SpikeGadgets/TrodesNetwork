@@ -22,6 +22,8 @@ class PythonClient(tnp.AbstractModuleClient):
         stoploop()
     def recv_event(self, origin, event, msg):
         print(origin, " ", event, ' ', msg)
+        if event == 'pxpercm':
+            self.pxpercm = msg[0]
         # if event == "NtrodeChanSelect":
             # print(msg)
 
@@ -32,6 +34,8 @@ if network.initialize() != 0:
     print("Network could not successfully initialize")
     del network
     quit()
+
+network.subscribeToEvent('CameraModule', 'pxpercm')
 
 # network.subscribeToEvent("Trodes", "NtrodeChanSelect")
 # network.sendMsgToModule('StateScript', 'StatescriptCommand', 's', ['commandhere'])
