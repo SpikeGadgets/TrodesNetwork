@@ -32,7 +32,7 @@ To test after installing:
 		2. Connect to a simulator stream (Connection -> Source -> Simulation)
 			* It should work on any source but for testing, use simulated.
 		3. Start streaming
-		4. Run: python3 testnetwork.py
+		4. Run: python3 examples/testnetwork.py
 
 To use: 
 	Basic documentation is on https://spikegadgets.github.io/docs/networkapi/. 

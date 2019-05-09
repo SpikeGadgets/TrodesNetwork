@@ -104,7 +104,8 @@ endif()
         # ARCHIVE       DESTINATION "${CMAKE_INSTALL_LIBDIR}"                            COMPONENT lib
         # RUNTIME       DESTINATION "${CMAKE_INSTALL_BINDIR}"                            COMPONENT bin
         # PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${LIBRARY_TARGET_NAME}" COMPONENT dev)
-install(FILES ./testnetwork.py DESTINATION tests)
+install(FILES ./testnetwork.py DESTINATION examples)
+install(FILES ./rmsplot.py DESTINATION examples)
 install(FILES ./setup.py DESTINATION spikegadgets_python)
 install(FILES __init__.py DESTINATION spikegadgets_python/spikegadgets)
 if(MSVC)
