@@ -56,7 +56,24 @@ target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CM
 
 #*******************
 # Linking libraries
-if(UNIX)
+if(APPLE)
+        link_libraries(${PYTHON_LIBRARIES})
+        
+        # add_definitions(-DBOOST_NO_AUTO_PTR)
+        # include_directories(/usr/local/Cellar/boost/1.69.0_2/include/)
+        # link_libraries(/usr/local/Cellar/boost-python3/1.69.0/lib/libboost_python37.a)
+        # link_libraries(/usr/local/Cellar/boost-python3/1.69.0/lib/libboost_numpy37.a)
+        set(Boost_USE_STATIC_LIBS ON)
+        set(Boost_USE_MULTITHREADED OFF)
+        find_package(Boost 1.69.0 EXACT REQUIRED COMPONENTS python37 numpy37)
+        if(Boost_FOUND)
+                message("Found Boost: " ${Boost_LIBRARIES})
+                include_directories(${Boost_INCLUDE_DIRS})
+                target_link_libraries(${LIBRARY_TARGET_NAME} ${Boost_LIBRARIES})
+                target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE BOOST_PYTHON_STATIC_LIB)
+                target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE BOOST_NUMPY_STATIC_LIB)
+        endif()
+elseif(UNIX)
         add_definitions(-DBOOST_NO_AUTO_PTR)
         include_directories(boost/include)
 
@@ -87,7 +104,9 @@ SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES PREFIX "")
 if(MSVC)
     SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES SUFFIX ".pyd")
 endif()
-
+if(APPLE)
+    SET_TARGET_PROPERTIES(${LIBRARY_TARGET_NAME} PROPERTIES SUFFIX ".so")
+endif()
 
 # If you used find_package() you need to use target_include_directories() and/or
 # target_link_libraries(). As explained previously, depending on the imported
