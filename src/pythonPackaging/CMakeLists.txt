@@ -57,7 +57,6 @@ target_include_directories(${LIBRARY_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CM
 #*******************
 # Linking libraries
 if(APPLE)
-        link_libraries(${PYTHON_LIBRARIES})
         
         # add_definitions(-DBOOST_NO_AUTO_PTR)
         # include_directories(/usr/local/Cellar/boost/1.69.0_2/include/)
@@ -73,6 +72,8 @@ if(APPLE)
                 target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE BOOST_PYTHON_STATIC_LIB)
                 target_compile_definitions(${LIBRARY_TARGET_NAME} PRIVATE BOOST_NUMPY_STATIC_LIB)
         endif()
+
+        target_link_libraries(${LIBRARY_TARGET_NAME} ${PYTHON_LIBRARIES})
 elseif(UNIX)
         add_definitions(-DBOOST_NO_AUTO_PTR)
         include_directories(boost/include)
