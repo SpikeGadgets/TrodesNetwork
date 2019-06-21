@@ -15,6 +15,11 @@ make
 make install
 ```
 
+If on MSVC, run the following instead of `make` commands
+```bash
+cmake --build . --target install --config Release
+```
+
 This will install the C++ headers, libraries, and python packaging into the specified directory `/path/to/library/directory`. If you want to install into the default location for your system, don't include the `-DCMAKE_INSTALL_PREFIX` part of the cmake call
 
 ## Using with C++

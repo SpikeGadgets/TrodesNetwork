@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import sys
 
 setup(name='SpikeGadgets',
       version='0.1',
@@ -9,5 +10,5 @@ setup(name='SpikeGadgets',
       install_requires=[
           'numpy',
       ],
-      package_data={'spikegadgets':['trodesnetwork.so']},
+      package_data= {'spikegadgets': ['trodesnetwork.pyd', 'czmq.dll', 'libmlm.dll']} if sys.platform=='win32' else {'spikegadgets':['trodesnetwork.so']},
       zip_safe=False)
