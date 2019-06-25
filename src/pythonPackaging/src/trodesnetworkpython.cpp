@@ -797,6 +797,7 @@ BOOST_PYTHON_MODULE(trodesnetwork){
         .def("sendStimulationStopGroup",&PythonModuleClient::sendStimulationStopGroup)
         .def("sendGlobalStimulationSettings", &PythonModuleClient::sendGlobalStimulationSettings)
         .def("sendGlobalStimulationCommand", &PythonModuleClient::sendGlobalStimulationCommand)
+        .def("sendStateScriptShortcutMessage", &PythonModuleClient::sendStateScriptShortcutMessage)
         .def("latestTrodesTimestamp", &PythonModuleClient::latestTrodesTimestamp)
         .def("sendAnnotationRequest", &PythonModuleClient::sendAnnotationRequest)
         ;

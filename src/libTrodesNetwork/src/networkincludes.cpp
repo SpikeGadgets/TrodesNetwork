@@ -1293,8 +1293,8 @@ void MlmWrap::message_reactor_task(zsock_t *pipe, void *args){
     zloop_reader(loop, mlm_client_msgpipe(self->client), MlmWrap::handle_mlm_msgpipe, self);
     //Set reader for pipe for outgoing messages
     zloop_reader(loop, pipe, MlmWrap::handle_usr_msgpipe, self);
-    //Set timer that runs every 1 sec for Abstractmoduleclient to utilize
-    zloop_timer(loop, 250, 0, MlmWrap::handle_abs_timer, self);
+    //Set timer that runs for Abstractmoduleclient to utilize
+    zloop_timer(loop, 25, 0, MlmWrap::handle_abs_timer, self);
     //Set variables
     self->reactor = loop;
     self->usrpipe = pipe;
