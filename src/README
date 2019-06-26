@@ -1,10 +1,13 @@
 To install:
 	Python3:
-		Type into terminal the following (you may need root privileges with sudo):
-		(if you already installed this, add --upgrade to the end to update the package)
-		(numpy will be installed if it is not already)
+		Type into terminal the following
 
-			python3 -m pip install spikegadgets_python/
+			python3 -m pip install spikegadgets_python/ --user
+
+			IMPORTANT NOTES: 
+			- If you already installed the package before, append "--upgrade" to update the package
+			- numpy will be installed if it is not already
+			- Windows users: change the slash at the end of spikegadgets_python/ to use "\"
 
 		To use:
 
