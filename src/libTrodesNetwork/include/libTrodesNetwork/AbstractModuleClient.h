@@ -162,6 +162,7 @@ private:
     std::string timestampaddress;
     uint32_t lastTimestamp = 0;
     int64_t lastsysTimestamp = 0;
+    std::mutex tsmutex;
     bool subToTimestamps(const std::string &address);
     bool unsubToTimestamps();
 };

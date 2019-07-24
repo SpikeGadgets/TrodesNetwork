@@ -554,6 +554,7 @@ uint32_t AbstractModuleClient::latestTrodesTimestamp(){
     if(!timestampsub){
         return 0;
     }
+    tsmutex.lock();
     //If zmq_recv succeeds, lastTimestamp is replaced. if not, the previous value is returned. win-win with no checks needed
     zmq_msg_t msg;
     zmq_msg_init(&msg);
@@ -562,13 +563,17 @@ uint32_t AbstractModuleClient::latestTrodesTimestamp(){
         lastsysTimestamp = *(int64_t*)((byte*)zmq_msg_data(&msg)+4);
     }
     zmq_msg_close(&msg);
+    tsmutex.unlock();
     return lastTimestamp;
 }
 
 int AbstractModuleClient::processTimer(int timer_id){
     int event;
     size_t eventsize = sizeof(event);
-    if(timestampsub)
+    if(timestampsub){
+        tsmutex.lock();
         zmq_getsockopt (zsock_resolve(timestampsub), ZMQ_EVENTS, &event, &eventsize);
+        tsmutex.unlock();
+    }
     return 0;
 }
