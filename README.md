@@ -4,7 +4,7 @@
 
 The purpose of this library is for users of Trodes to be able to access spikes, LFP points, camera position, and other valuable data live, during their experiment, using Python or C++. The API also provides the ability for users' programs to communicate and send messages to other modules and even Trodes. Useful applications include: a live ripple detection script, graphing/plotting data, and closed loop experiments.
 
-## Building
+## Building on Linux
 
 To build from scratch, run the following
 
@@ -15,8 +15,10 @@ make
 make install
 ```
 
-If on MSVC, run the following instead of `make` commands
+## Building on Windows
 ```bash
+mkdir build && cd build
+cmake -G "Visual Studio 14 2015 Win64"  -DCMAKE_INSTALL_PREFIX=C:/newlibinstallsmsvc/  -DLIBZMQ_ROOT_DIR='C:/Program Files/ZeroMQ/' -DCZMQ_ROOT_DIR='C:/Program Files/czmq/' -DMALAMUTE_ROOT_DIR='C:/Program Files/malamute/' ..
 cmake --build . --target install --config Release
 ```
 

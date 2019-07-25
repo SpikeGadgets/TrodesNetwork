@@ -87,3 +87,7 @@ install(TARGETS ${LIBRARY_TARGET_NAME}
         PRIVATE_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"                       COMPONENT dev)
 install(DIRECTORY ../utility/cereal DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS ${LIBRARY_TARGET_NAME})
+
+if(MSVC)
+        install(FILES ../zmq/msvc64/czmq.dll ../zmq/msvc64/libmlm.dll DESTINATION bin)
+endif()
