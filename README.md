@@ -6,7 +6,9 @@ The purpose of this library is for users of Trodes to be able to access spikes, 
 
 ## Building on Linux
 
-To build from scratch, run the following
+Before building, make sure you download and build the following static libraries: libzmq, czmq, malamute. Make sure you download and build Boost_Python as well for the Python library
+
+To build from scratch, run the following. 
 
 ```bash
 mkdir build && cd build
@@ -16,6 +18,35 @@ make install
 ```
 
 ## Building on Windows
+
+### Building ZeroMQ/CZMQ/Malamute
+
+First download the three libraries, changing branches to the latest_release. Currently, libzmq can be built as static, but czmq and malamute don't work for some reason. 
+
+Get CMake for windows, and the MSVC version used for Trodes (currently Visual Studio 14 2015, 64-bit)
+
+```bash
+cd libzmq/ # navigate to wherever libzmq is 
+mkdir build && cd build
+cmake -G "Visual Studio 14 2015 Win64" -DZMQ_STATIC=ON ..
+cmake --build . --target install --config Release
+# ... 
+cd czmq/ # navigate to wherever czmq is 
+mkdir build && cd build
+cmake -G "Visual Studio 14 2015 Win64" -DLIBZMQ_ROOT_DIR='C:/Program Files/ZeroMQ/' ..
+cmake --build . --target install --config Release
+# ... 
+cd malamute/ # navigate to wherever malamute is
+mkdir build && cd build
+cmake -G "Visual Studio 14 2015 Win64" -DLIBZMQ_ROOT_DIR='C:/Program Files/ZeroMQ/' -DCZMQ_ROOT_DIR='C:/Program Files/czmq/' ..
+cmake --build . --target install --config Release
+```
+
+
+### Building TrodesNetwork
+
+Now having built the three libraries, and also Boost Python, build TrodesNetwork. Change any paths in the build script if needed. 
+
 ```bash
 mkdir build && cd build
 cmake -G "Visual Studio 14 2015 Win64"  -DCMAKE_INSTALL_PREFIX=C:/newlibinstallsmsvc/  -DLIBZMQ_ROOT_DIR='C:/Program Files/ZeroMQ/' -DCZMQ_ROOT_DIR='C:/Program Files/czmq/' -DMALAMUTE_ROOT_DIR='C:/Program Files/malamute/' ..
