@@ -55,6 +55,18 @@ cmake --build . --target install --config Release
 
 This will install the C++ headers, libraries, and python packaging into the specified directory `/path/to/library/directory`. If you want to install into the default location for your system, don't include the `-DCMAKE_INSTALL_PREFIX` part of the cmake call
 
+## Navigating source code
+
+src/libTrodesNetwork contains the main source code for the library. Start with browsing the zeromq guide http://zguide.zeromq.org/, and then look at what CZMQ and Malamute libraries are for. Finally, start with the AbstractModuleClient class, which is what our customers/users will be using the most from this library, whether in Python or C++. 
+
+- AbstractModuleClient: Main class for users to use or subclass from 
+- CZHelp: class with static helper functions to be used across the library. 
+- highfreqclasses: file that uses PUB-SUB zeromq pattern to create classes that can publish or subscribe to data streams. One pub class, and one base sub class (HFSubConsumer), and many Trodes-specific stream classes (LFP, spikes, etc)
+- networkDataTypes: common data types to be transmitted across the network
+- networkincludes: a poorly named file and class that contains the class MlmWrap, which is the base class of both the abstractmoduleclient class and the TrodesCentralServer class in the trodes repo
+- trodesglobaltypes: a mix of more types and classes that are used all over the codebase as well as for users of this library 
+- trodesmsg: a message class that wraps zmq message frames. 
+
 ## Using with C++
 
 To use with C++, simply `#include` the headers you need, and compile against the library using `-lTrodesNetwork`. You may need to specify the header directory using `-I/path/to/library/include` and/or the library directory using `-L/path/to/library/lib`.
