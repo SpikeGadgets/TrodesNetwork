@@ -37,7 +37,7 @@ struct _mlm_client_t; typedef _mlm_client_t mlm_client_t;
 
 
 
-/*! \struct HFSubSockSettings
+/* HFSubSockSettings
  * Struct that contains all settings related to HighFreqSub sockets.
  * Specifically, these objects are used by the module's MlmWrapper to retain all
  * information about currently active subscriptions so the these subscriptions
@@ -134,7 +134,7 @@ private:
 //    std::vector<HighFreqDataType>   provided_hfdts;
 //    std::vector<HighFreqSub*>       hf_subscribers;
 };
-/*! \class MlmWrap
+/* MlmWrap
  * Malamute wrapper to be used in Trodes server as well as module clients
  * This serves as the message handler, as well as the interface connecting
  * ZeroMQ and Qt, or any other framework. The public functions should never contain anything related
@@ -417,7 +417,7 @@ private:
 
 class BrokerClient;
 
-/*! \class CentralBroker
+/*  CentralBroker
  *  The CentralBroker class used only in Trodes to launch and contain a malamute broker.  This class
  *  also contains an attached client that is used by other clients to communicate directly to the
  *  broker.
@@ -450,7 +450,7 @@ private:
     static int logging_forward_log(zloop_t *loop, zsock_t *reader, void *arg);
 };
 
-/*! \class BrokerClient
+/*  BrokerClient
  *  The BrokerClient class used by the CentralBroker class as a communication access point.
  *  Other clients attached to the CentralBroker use the BrokerClient to communicate directly
  *  directly with the CentralBroker.

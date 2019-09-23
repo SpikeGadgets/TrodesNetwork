@@ -28,7 +28,7 @@ class binarydata;
 
 /*!
  * \class CZHelp
- * CZHelp is a class used to facilitate using ZMQ and CZMQ
+ * \brief A class that provides helper functions for the user to access or the API to use internally
  *
  * This class wraps several helper functions in the CZHelp namespace (it is not ment to be initiated and used
  * as an object, though you can if you want).  Primarily, CZHelp's purpose is to simplify constructing zmsgs

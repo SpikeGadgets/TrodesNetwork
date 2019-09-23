@@ -4,15 +4,16 @@
 #include <set>
 
 /*! \class AbstractModuleClient
- *  This base class is the layer that receives and stores all Trodes Network specific data and messages.
- *  This includes recording related commands, data types, etc.
+ *  \brief This base class is the layer that receives and stores all Trodes Network specific data and messages. This includes recording related commands, data types, etc.
  *
  *  Usage:
- *  Inherit from this class.
- *  Receiving messages:
+ * 
+ *  1. Inherit from this class.
+ * 
+ *  2. Receiving messages:
  *      -Optionally reimplement any number of the recv_* functions, which are called when relevant messages come in
  *
- *  Sending messages:
+ *  3. Sending messages:
  *      -Call the send* functions to send messages out across the network.
  *
  */

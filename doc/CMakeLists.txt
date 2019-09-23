@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # This variable should contain the argument of the project call in the main CMakeLists.txt
-set(ORIGINAL_PROJECT_NAME "LibTemplateCMake")
+set(ORIGINAL_PROJECT_NAME "TrodesNetworkAPI")
 project(${ORIGINAL_PROJECT_NAME}Docs)
 
 include(GNUInstallDirs)

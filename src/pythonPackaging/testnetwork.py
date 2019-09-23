@@ -23,6 +23,10 @@ if network.initialize() != 0:
 datastream = network.subscribeLFPData(100, ['1','2', '5', '6', '7', '8', '10'])
 datastream.initialize() #Initialize the streaming object
 
+###############################
+## Main Loop
+###############################
+
 buf = datastream.create_numpy_array()
 timestamp = 0
 #Continuously get data until Trodes tells us to quit, which triggers the function that flips the "stillrunning" variable

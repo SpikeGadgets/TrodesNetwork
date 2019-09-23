@@ -29,7 +29,7 @@ class PythonClient(tnp.AbstractModuleClient):
 
 
 #Connect and initialize
-network = PythonClient("BasicPython", "tcp://127.0.0.1",49152)
+network = PythonClient("BasicPython2", "tcp://127.0.0.1",49152)
 if network.initialize() != 0:
     print("Network could not successfully initialize")
     del network
@@ -71,19 +71,24 @@ network.initializeHardwareConnection()
 
 ################################################################################
 
-# datastream = network.subscribeHighFreqData('PositionData', 'CameraModule', 60)
-# datastream.initialize()
-# ndtype = datastream.getDataType().dataFormat
-# nbytesize = datastream.getDataType().byteSize
-# dt = numpy.dtype(ndtype)
-# buf = memoryview(bytes(nbytesize))
-# npbuff = numpy.frombuffer(buf, dtype=dt)
-# while stillrunning:
-#     n = datastream.available(1000)
-#     for i in range(n):
-#         byteswritten = datastream.readData(npbuff)
-#         print(tnp.systemTimeMSecs() - datastream.lastSysTimestamp(), npbuff[0])
-#         # print(bytes(buf))
+datastream = network.subscribeHighFreqData('PositionData', 'CameraModule', 60)
+datastream.initialize()
+ndtype = datastream.getDataType().dataFormat
+nbytesize = datastream.getDataType().byteSize
+dt = numpy.dtype(ndtype)
+buf = memoryview(bytes(nbytesize))
+npbuff = numpy.frombuffer(buf, dtype=dt)
+while stillrunning:
+    n = datastream.available(1000)
+    for i in range(n):
+        byteswritten = datastream.readData(npbuff)
+        print(tnp.systemTimeMSecs() - datastream.lastSysTimestamp(), npbuff[0])
+        # print(bytes(buf))
+
+#Cleanup
+network.closeConnections()
+print("closed connections")
+quit()
 
 ################################################################################
 

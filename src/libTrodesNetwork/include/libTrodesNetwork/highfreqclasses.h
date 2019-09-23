@@ -14,6 +14,12 @@ struct _zloop_t; typedef _zloop_t zloop_t;
 struct _zframe_t; typedef _zframe_t zframe_t;
 typedef struct zmq_pollitem_t zmq_pollitem_t;
 typedef unsigned char byte;
+
+/*!
+    \class HighFreqPub
+    \brief Class to publish high frequency data. 
+
+*/
 class HighFreqPub {
 public:
     HighFreqPub();
@@ -32,7 +38,7 @@ private:
     zsock_t *hfPub; //! High Frequency publisher object
 };
 
-/*!
+/*
  * \brief The HighFreqSub base class
  * Usage: Base class for the two types of high frequency data subscribers
  * Base class contains the data type, actor, subscriber socket
@@ -81,19 +87,32 @@ struct MyTraits : public moodycamel::ConcurrentQueueDefaultTraits
 
 typedef bool (*consumer_queue_filter) (void *data, size_t bytes, void *args);
 bool default_consumer_queue_filter(void* data, size_t bytes, void *args);
-/*!
- * \brief The HFSubConsumer class
- * producer-consumer problem. Bufferwriter called when subscriber socket gets a message
- * readData is the consumer part, and consumes data.
- * Thread safe with atomic ints pointing to indices
- * Implemented with circular buffer. If writer is too fast, then oldest message will be tossed.
- * Incoming messages are always written, but if reader too slow, then not all will necessarily
- * be available to be read
+/*! \class HFSubConsumer
+    \brief A base class to subscribe to high frequency data.
+   
+    It is preferred to call AbstractModuleClient::subscribeHighFreqData() to instantiate this class, though you may create 
+    it manually. 
+    
+    This class takes in a HighFreqDataType and uses that to connect and subscribe to data from the source. Under the hood, 
+    it keeps a buffer that holds the data until the user calls `readData()` to pop the next one in line. Since data in the 
+    Trodes ecosystem is time sensitive, old data will be overwritten by new one, if the `bfsize` buffer size max is reached. 
+   
+    Implementation details: 
+
+    - producer-consumer problem. Bufferwriter called when subscriber socket gets a message
+    - readData is the consumer part, and consumes data.
+    - Thread safe with atomic ints pointing to indices
+    - Implemented with circular buffer. If writer is too fast, then oldest message will be tossed.
+    - Incoming messages are always written, but if reader too slow, then not all will necessarily
+    be available to be read
  */
 class HFSubConsumer : public HighFreqSub{
 public:
+    //! Constructor
     HFSubConsumer(HighFreqDataType hf, size_t bfsize, consumer_queue_filter filter = default_consumer_queue_filter);
     virtual ~HFSubConsumer();
+
+    //! Must call `initialize()` before doing anything. Initializes connections and buffer
     void initialize();
 
     //! Copies next data packet to provided dest buffer
@@ -103,6 +122,7 @@ public:
     //! If timeout = 0, return immediately if no messages
     //! If timeout <0, blocking indefinitely
     //! Otherwise, timeout is in milliseconds
+    //! Call available before calling `readData()` to verify that there exists data to be read.
     size_t available(long timeout);
 
     //! Returns the latency of the last data popped by the user
@@ -143,7 +163,8 @@ private:
 
 typedef void (*hfs_data_callback_fn) (void *data, size_t bytes, void *args);
 void default_callback_fn(void *data, size_t bytes, void *args);
-/*!
+
+/*
  * \brief The HFSubWorker class
  * task workers, distributed computing problem.
  * Creates n threads, and distributes incoming messages to be processed with callback function

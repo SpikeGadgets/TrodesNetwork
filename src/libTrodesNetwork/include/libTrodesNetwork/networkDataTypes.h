@@ -32,7 +32,7 @@ private:
     std::string str;
 };
 
-/*! Abstract Base Class NetworkDataType
+/* Abstract Base Class NetworkDataType
  * The NetworkDataType is a standard abstract base class that should be inherited by any user defined
  * structs/classes that are to be passed over the networking code.  The main purpose of the class is 
  * to provide the virtual functions encode and decode, which are called when encoding and decoding the
@@ -99,12 +99,20 @@ private:
     }
 };
 
-//This class contains a description of high frequency data types
+/*! \class HighFreqDataType
+    \brief This class stores information about network high frequency data streams
+
+    For Trodes' built-in data types, these are generated automatically from the AbstractModuleClient class. Those include 
+    types like LFP data, spikes, and neural data. 
+
+    For custom types not part of Trodes, you need to construct and fill in the fields manually
+
+*/
 class HighFreqDataType : public NetworkDataType {
 public:
     HighFreqDataType();
     HighFreqDataType(const HighFreqDataType &);
-    HighFreqDataType(std::string n, std::string o, std::string dformat, std::string sock, int bsize);
+    HighFreqDataType(std::string name, std::string origin, std::string dformat, std::string sock, int bsize);
     ~HighFreqDataType();
     bool operator==(const HighFreqDataType &obj);
     bool operator<(const HighFreqDataType obj) const;
