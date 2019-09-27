@@ -1,25 +1,42 @@
-#include "main.hpp"
+/*
+    Example code 
+        
+    1. Run Trodes w/ data streaming, open cameraModule, and turn on tracking. 
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
+    2. Build and run this file:
+        g++ -std=c++14 -I /home/kevin/trodesnetworkinstall/include/ -L /home/kevin/trodesnetworkinstall/lib/ LFP_Camera_Data.cpp -o LFP_Camera_Data -lTrodesNetwork -lpthread
+        LD_LIBRARY_PATH=/home/kevin/trodesnetworkinstall/lib/ ./LFP_Camera_Data
+*/
+
+
+#include "TrodesNetwork/AbstractModuleClient.h"
+
+typedef struct __attribute__((__packed__)) {
+	uint32_t ts;
+	int32_t line_segment;
+	double pos_on_segment;
+	int16_t x,y;
+} trodes_vid_packet;
+
 int main(int argc, char **argv)
 {
-#pragma GCC diagnostic pop
-    spikePacket ssp;
-    trodes_vid_packet svp;
-    size_t vidsz;
-    timestamp_t ts;
-
-    MRMClient *client = new MRMClient();
-    SpikesConsumer *spkcon;
-    HFSubConsumer *vidcon;
+    AbstractModuleClient *client = new AbstractModuleClient("LFP_Camera", "tcp://127.0.0.1", 49152);
+    SpikesConsumer *spkconn;
+    HFSubConsumer *vidconn;
 
     int res = client->initialize();
-    if (res)
-    {
+    if (res){
         printf("Couldn't init client\n");
         delete client;
         return -1;
     }
+    
+    std::cout << "Initialized client\n";
+
+    spikePacket ssp;
+    trodes_vid_packet svp;
+    size_t vidsz;
+    timestamp_t ts;
 
     int num_tetrodes = 3;
     const int TRODES_SPIKE_BUF_SZ = 1024;
@@ -30,28 +47,30 @@ int main(int argc, char **argv)
         for (int i = 0; i <= 8; i++)
             ntrodes.push_back(std::to_string(t + 1) + "," + std::to_string(i));
     }
-    spkcon = client->subscribeSpikeData(TRODES_SPIKE_BUF_SZ, ntrodes);
-    spkcon->initialize();
 
-    vidcon = client->subscribeHighFreqData("PositionData", "CameraModule");
-    vidcon->initialize();
+    //Create and initialize spike connection and video position connection
+    spkconn = client->subscribeSpikeData(TRODES_SPIKE_BUF_SZ, ntrodes);
+    spkconn->initialize();
 
-    vidsz = vidcon->getType().getByteSize();
+    vidconn = client->subscribeHighFreqData("PositionData", "CameraModule");
+    vidconn->initialize();
+
+    vidsz = vidconn->getType().getByteSize();
     assert(vidsz == sizeof(trodes_vid_packet));
 
-    //first clear out old data between prep function and starting
-    while (vidcon->available(0))
-        vidcon->readData(&svp, vidsz);
 
-    while (spkcon->available(0))
-        spkcon->getData(&ssp);
+    //first clear out old data between prep function and starting
+    while (vidconn->available(0))
+        vidconn->readData(&svp, vidsz);
+
+    while (spkconn->available(0))
+        spkconn->getData(&ssp);
 
     uint32_t start_time = client->latestTrodesTimestamp();
 
     //main loop
-    //bool wrote_excl_t_start = false, wrote_excl_t_end = true;
     uint32_t first_ts_spk, last_ts_spk;
-    bool fs_spk = true;
+    bool first_spk = true;
     uint32_t first_ts_vid, last_ts_vid, latest_ts;
     bool fs_vid = true;
 
@@ -59,36 +78,34 @@ int main(int argc, char **argv)
 
     //!!!!! switch here, 500 for simulation, 10000 for recording
     int max_spk_count = 500;
-    //int max_spk_count = 10000;
 
     while (spk_count < max_spk_count)
     {
         //receive data from trodes
-        int n = spkcon->available(1);
+        int n = spkconn->available(1);
 
         for (int i = 0; i < n; i++)
         {
-            ts = spkcon->getData(&ssp);
+            ts = spkconn->getData(&ssp);
             spk_count++;
 
-            if (fs_spk)
+            if (first_spk)
             {
-                //std::cout << "got first spike\n";
-                fs_spk = false;
+                first_spk = false;
                 first_ts_spk = ts.trodes_timestamp;
             }
             last_ts_spk = ts.trodes_timestamp;
             latest_ts = client->latestTrodesTimestamp();
-            std::cout << "spike: " << last_ts_spk << '\t' << latest_ts << '\t' << latest_ts-last_ts_spk << '\n';
 
-            //process spike
+            //process spike here
+            std::cout << "spike: " << last_ts_spk << '\t' << latest_ts << '\t' << latest_ts-last_ts_spk << '\n';
         }
 
-        n = vidcon->available(1);
+        n = vidconn->available(1);
 
         for (int i = 0; i < n; i++)
         {
-            size_t rdsz = vidcon->readData(&svp, vidsz);
+            size_t rdsz = vidconn->readData(&svp, vidsz);
             if (rdsz != vidsz)
             {
                 printf("Getting weird results from video data subscription!");
@@ -103,9 +120,9 @@ int main(int argc, char **argv)
             }
             last_ts_vid = svp.ts;
             latest_ts = client->latestTrodesTimestamp();
-            std::cout << "video: " << last_ts_vid << '\t' << latest_ts << '\t' << latest_ts-last_ts_vid << '\n';
 
-            //process video
+            //process video here
+            std::cout << "video: " << last_ts_vid << '\t' << latest_ts << '\t' << latest_ts-last_ts_vid << '\n';
         }
     }
 
