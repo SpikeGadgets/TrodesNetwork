@@ -620,7 +620,7 @@ HFParsingInfo MlmWrap::createNeuralParsingInfo(std::vector<std::string> channels
     HFParsingInfo info;
     for(auto &channel : channels){
         //Should be "ntrode id, nth channel"
-        size_t i;
+        // size_t i;
         // int nt = -1, ch = -1;
         // nt = std::stoi(channel, &i);
         // ch = std::stoi(channel.substr(i+1));
@@ -639,14 +639,14 @@ HFParsingInfo MlmWrap::createNeuralParsingInfo(std::vector<std::string> channels
             return HFParsingInfo();
         }
         if(chstr == "*"){
-            for(int i = 0; i < nt.getHw_chans().size(); ++i){
+            for(unsigned int i = 0; i < nt.getHw_chans().size(); ++i){
                 info.indices.push_back(nt.getHWChan(i));
                 info.dataRequested.push_back(ntstr+", "+std::to_string(i));
             }
         }
         else if(CZHelp::is_integer(chstr)){
             int ch = std::stoi(chstr);
-            if(ch < 0 || ch >= nt.getHw_chans().size()){
+            if(ch < 0 || ch >= (int)nt.getHw_chans().size()){
                 std::cerr << error("Invalid hw chan ") << ch << "\n";
                 return HFParsingInfo();
             }
@@ -1706,7 +1706,7 @@ int MlmWrap::recv_hardware_request(zloop_t *loop, zsock_t *reader, void *arg){
     zmsg_t *reply = zmsg_new();
     zmsg_addstr(reply, sender);
     zmsg_add(reply, zframe_new_empty());
-    for(int i = 0; i < tmsg.numContents(); ++i)
+    for(unsigned int i = 0; i < tmsg.numContents(); ++i)
         zmsg_addstr(reply, tmsg.popstr().c_str());
     zmsg_send(&reply, reader);
     return 0;

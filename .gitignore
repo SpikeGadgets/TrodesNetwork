@@ -60,5 +60,10 @@ xcodeenvvar.txt
 .vs/
 CMakeSettings.json
 
-# Python cache #
+# Python cache
 __pycache__/
+
+# Build files
+Makefile*
+*.stash
+*.pro.user*
