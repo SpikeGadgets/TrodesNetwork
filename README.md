@@ -19,6 +19,10 @@ make install
 
 ## Building on Windows
 
+Building on Windows is a pain. There are three major compilers for Windows: Mingw32, Mingw-w64, and MSVC (and not counting all the different versions of MSVC). Because of the fact that open source libraries typically don't have good support for Windows (most are built around Linux), building libraries on Windows is tricky. Not only that, different compilers have different C++ runtimes, dll's, and even incompatible symbols. So libraries built on one compiler doesn't run in a program/library built with another compiler. 
+
+For this library (TrodesNetwork), we needed to use a compiler that was easy* to compile the ZeroMQ libraries with (libzmq, czmq, malamute), is supported by Qt, can run with the default installed Python interpreter, and can compile Boost (for Boost-Python). For that reason, we went with Visual Studio 2015 version 14.0 64-bit. This is supported by Qt versions (5.9.* and 5.12.*), the Python 64-bit interpreter/libraries (https://www.python.org/downloads/windows/), and the ZeroMQ libraries (with the least amount of difficulty). 
+
 ### Building ZeroMQ/CZMQ/Malamute
 
 First download the three libraries, changing branches to the latest_release. Currently, libzmq can be built as static, but czmq and malamute don't work for some reason. 
