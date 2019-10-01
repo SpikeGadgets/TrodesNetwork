@@ -1,25 +1,13 @@
+include(../trodesnetwork_build_defaults.pri)
+
 #Build a library
 TEMPLATE = lib
 #Named libTrodesNetwork
 TARGET = TrodesNetwork
-#Remove qt library linking
-QT -= core gui
-#General build config
-#Build directories
-CONFIG(debug, debug|release): DESTDIR = $$_PRO_FILE_PWD_/build_d
-else: DESTDIR = $$_PRO_FILE_PWD_/build
-
-CONFIG += c++14 warn_on
 
 VERSION = 0.1.2
 
 QMAKE_CLEAN += $$DESTDIR/*$$TARGET*
-
-
-UI_DIR = $$DESTDIR/ui
-MOC_DIR = $$DESTDIR/moc
-OBJECTS_DIR = $$DESTDIR/obj
-RCC_DIR = $$DESTDIR/rcc
 
 INCLUDEPATH += ../utility/
 INCLUDEPATH += ../zmq/include/
@@ -56,4 +44,13 @@ win32:{
     LIBS += ../zmq/msvc64/ZeroMQ/lib/libzmq-v140-mt-4_3_1.lib
     LIBS += ../zmq/msvc64/czmq/lib/czmq.lib
     LIBS += ../zmq/msvc64/malamute/lib/mlm.lib
+}
+
+macx{
+    QMAKE_CFLAGS_WARN_ON += -Wno-unused-parameter
+    QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
+
+    LIBS +=  ../zmq/macos/libzmq/lib/libzmq.a
+    LIBS +=  ../zmq/macos/czmq/lib/libczmq.a
+    LIBS +=  ../zmq/macos/malamute/lib/libmlm.a
 }

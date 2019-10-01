@@ -550,7 +550,7 @@ std::vector<std::string> MlmWrap::getClients(){
         cl = zmsg_popstr(msg);
     }
     zmsg_destroy(&msg);
-    return std::move(clients);
+    return clients;
 }
 
 std::string MlmWrap::getEndpoint() const{
