@@ -6,11 +6,13 @@ TARGET = TrodesNetwork
 QT -= core gui
 #General build config
 #Build directories
-### should go into a .pri file
 CONFIG(debug, debug|release): DESTDIR = $$_PRO_FILE_PWD_/build_d
 else: DESTDIR = $$_PRO_FILE_PWD_/build
+
 CONFIG += c++14 warn_on
+
 VERSION = 0.1.2
+
 QMAKE_CLEAN += $$DESTDIR/*$$TARGET*
 
 
@@ -19,7 +21,6 @@ MOC_DIR = $$DESTDIR/moc
 OBJECTS_DIR = $$DESTDIR/obj
 RCC_DIR = $$DESTDIR/rcc
 
-### should go into a .pri file
 INCLUDEPATH += ../utility/
 INCLUDEPATH += ../zmq/include/
 INCLUDEPATH += include/
@@ -41,9 +42,18 @@ HEADERS +=  include/libTrodesNetwork/AbstractModuleClient.h \
             include/libTrodesNetwork/trodesglobaltypes.h \
             include/libTrodesNetwork/trodesmsg.h
 
-QMAKE_CXXFLAGS += -Wno-unused-parameter
 unix:!macx {
+    QMAKE_CXXFLAGS += -Wno-unused-parameter
+
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libzmq.a -Wl,--no-whole-archive
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libczmq.a -Wl,--no-whole-archive
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libmlm.a -Wl,--no-whole-archive
+}
+
+win32:{
+    QMAKE_CXXFLAGS_WARN_ON -= -w34100 #disable unreferenced formal parameter
+
+    LIBS += ../zmq/msvc64/ZeroMQ/lib/libzmq-v140-mt-4_3_1.lib
+    LIBS += ../zmq/msvc64/czmq/lib/czmq.lib
+    LIBS += ../zmq/msvc64/malamute/lib/mlm.lib
 }

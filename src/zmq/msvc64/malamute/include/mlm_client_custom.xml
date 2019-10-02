@@ -1,0 +1,139 @@
+<header>
+//  Send multipart string message to stream, end list with NULL
+//  Returns 0 if OK, -1 if failed due to lack of memory or other error.
+MLM_EXPORT int
+    mlm_client_sendx (mlm_client_t *self, const char *subject, const char *content, ...);
+    
+//  Send multipart string to mailbox, end list with NULL
+//  Returns 0 if OK, -1 if failed due to lack of memory or other error.
+MLM_EXPORT int
+    mlm_client_sendtox (mlm_client_t *self, const char *address, const char *subject, const char *content, ...);
+
+//  Send multipart string to service, end list with NULL
+//  Returns 0 if OK, -1 if failed due to lack of memory or other error.
+MLM_EXPORT int
+    mlm_client_sendforx (mlm_client_t *self, const char *address, const char *subject, const char *content, ...);
+    
+//  Receive a subject and string content from the server. The content may be
+//  1 or more string frames. This method is orthogonal to the sendx methods.
+//  End the string arguments with NULL. If there are not enough frames in
+//  the received message, remaining strings are set to NULL. Returns number
+//  of string contents received, or -1 in case of error. Free the returned
+//  subject and content strings when finished with them. To get the type of
+//  the command, use mlm_client_command ().
+MLM_EXPORT int
+    mlm_client_recvx (mlm_client_t *self, char **subject_p, char **string_p, ...);
+</header>
+
+<source>
+//  ---------------------------------------------------------------------------
+//  Send multipart string message to stream, end list with NULL
+//  Returns 0 if OK, -1 if failed due to lack of memory or other error.
+
+int
+mlm_client_sendx (
+    mlm_client_t *self,
+    const char *subject,
+    const char *content, ...)
+{
+    assert (self);
+    zmsg_t *msg = zmsg_new ();
+    if (!msg)
+        return -1;              //  Can't allocate memory
+    va_list args;
+    va_start (args, content);
+    while (content) {
+        zmsg_addstr (msg, content);
+        content = va_arg (args, char *);
+    }
+    va_end (args);
+    return mlm_client_send (self, subject, &msg);
+}
+
+
+//  ---------------------------------------------------------------------------
+//  Send multipart string to mailbox, end list with NULL
+//  Returns 0 if OK, -1 if failed due to lack of memory or other error.
+
+int
+mlm_client_sendtox (
+    mlm_client_t *self,
+    const char *address,
+    const char *subject,
+    const char *content, ...)
+{
+    assert (self);
+    zmsg_t *msg = zmsg_new ();
+    if (!msg)
+        return -1;              //  Can't allocate memory
+    va_list args;
+    va_start (args, content);
+    while (content) {
+        zmsg_addstr (msg, content);
+        content = va_arg (args, char *);
+    }
+    va_end (args);
+    return mlm_client_sendto (self, address, subject, NULL, 0, &msg);
+}
+
+
+//  ---------------------------------------------------------------------------
+//  Send multipart string to service, end list with NULL
+//  Returns 0 if OK, -1 if failed due to lack of memory or other error.
+
+int
+mlm_client_sendforx (
+    mlm_client_t *self,
+    const char *address,
+    const char *subject,
+    const char *content, ...)
+{
+    assert (self);
+    zmsg_t *msg = zmsg_new ();
+    if (!msg)
+        return -1;              //  Can't allocate memory
+    va_list args;
+    va_start (args, content);
+    while (content) {
+        zmsg_addstr (msg, content);
+        content = va_arg (args, char *);
+    }
+    va_end (args);
+    return mlm_client_sendfor (self, address, subject, NULL, 0, &msg);
+}
+
+
+//  ---------------------------------------------------------------------------
+//  Receive a subject and string content from the server. The content may be
+//  1 or more string frames. This method is orthogonal to the sendx methods.
+//  End the string arguments with NULL. If there are not enough frames in
+//  the received message, remaining strings are set to NULL. Returns number
+//  of string contents received, or -1 in case of error. Free the returned
+//  subject and content strings when finished with them. To get the type of
+//  the command, use mlm_client_command ().
+
+int
+mlm_client_recvx (
+    mlm_client_t *self,
+    char **subject_p,
+    char **string_p, ...)
+{
+    assert (self);
+    zmsg_t *msg = mlm_client_recv (self);
+    if (!msg)
+        return -1;
+
+    *subject_p = strdup (mlm_client_subject (self));
+    int count = 0;
+    va_list args;
+    va_start (args, string_p);
+    while (string_p) {
+        *string_p = zmsg_popstr (msg);
+        string_p = va_arg (args, char **);
+        count++;
+    }
+    va_end (args);
+    zmsg_destroy (&msg);
+    return count;
+}
+</source>

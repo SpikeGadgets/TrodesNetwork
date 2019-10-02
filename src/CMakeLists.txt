@@ -12,6 +12,10 @@
 #     link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/zmq/win32/lib_64/libmlm.lib)
 # elseif(WIN32)
 if(WIN32)
+    set(LIBZMQ_ROOT_DIR "./zmq/msvc64/ZeroMQ/")
+    set(CZMQ_ROOT_DIR "./zmq/msvc64/czmq/")
+    set(MALAMUTE_ROOT_DIR "./zmq/msvc64/malamute")
+
     find_package(libzmq REQUIRED)
     IF (LIBZMQ_FOUND)
         include_directories(${LIBZMQ_INCLUDE_DIRS})

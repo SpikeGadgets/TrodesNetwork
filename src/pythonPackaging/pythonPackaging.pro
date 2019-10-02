@@ -22,9 +22,8 @@ MOC_DIR = $$DESTDIR/moc
 OBJECTS_DIR = $$DESTDIR/obj
 RCC_DIR = $$DESTDIR/rcc
 
-### should go into a .pri file
 DEFINES += BOOST_PYTHON_STATIC_LIB
-DEFINES += BOOST_NO_AUTO_PTR
+DEFINES += BOOST_NUMPY_STATIC_LIB
 
 
 INCLUDEPATH += ../utility/
@@ -49,12 +48,30 @@ HEADERS +=  ../libTrodesNetwork/include/libTrodesNetwork/AbstractModuleClient.h 
             ../libTrodesNetwork/include/libTrodesNetwork/trodesglobaltypes.h \
             ../libTrodesNetwork/include/libTrodesNetwork/trodesmsg.h
 
-QMAKE_CXXFLAGS += -Wno-unused-parameter
 unix:!macx {
+    DEFINES += BOOST_NO_AUTO_PTR
+    QMAKE_CXXFLAGS += -Wno-unused-parameter
+
     INCLUDEPATH += /usr/include/python3.5m/
+
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libzmq.a -Wl,--no-whole-archive
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libczmq.a -Wl,--no-whole-archive
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libmlm.a -Wl,--no-whole-archive
     LIBS += boost/lib/libboost_python3.a
     LIBS += boost/lib/libboost_numpy3.a
+}
+
+win32:{
+    CONFIG += skip_target_version_ext
+    QMAKE_CXXFLAGS_WARN_ON -= -w34100 #disable unreferenced formal parameter
+
+    INCLUDEPATH += C:/Python3.5/include/
+    INCLUDEPATH += C:/Boost/include/boost-1_65_1/
+
+    LIBS += ../zmq/msvc64/ZeroMQ/lib/libzmq-v140-mt-4_3_1.lib
+    LIBS += ../zmq/msvc64/czmq/lib/czmq.lib
+    LIBS += ../zmq/msvc64/malamute/lib/mlm.lib
+    LIBS += C:/Python3.5/libs/python35.lib
+    LIBS += C:/Boost/lib/libboost_python3-vc140-mt-1_65_1.lib
+    LIBS += C:/Boost/lib/libboost_numpy3-vc140-mt-1_65_1.lib
 }
