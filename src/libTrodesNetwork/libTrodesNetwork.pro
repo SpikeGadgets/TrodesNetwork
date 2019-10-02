@@ -39,6 +39,7 @@ unix:!macx {
 }
 
 win32:{
+    CONFIG += skip_target_version_ext
     QMAKE_CXXFLAGS_WARN_ON -= -w34100 #disable unreferenced formal parameter
 
     LIBS += ../zmq/msvc64/ZeroMQ/lib/libzmq-v140-mt-4_3_1.lib

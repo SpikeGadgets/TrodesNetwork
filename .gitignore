@@ -67,3 +67,4 @@ __pycache__/
 Makefile*
 *.stash
 *.pro.user*
+*_resource.rc

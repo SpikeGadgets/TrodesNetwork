@@ -50,15 +50,16 @@ win32:{
     CONFIG += skip_target_version_ext
     QMAKE_CXXFLAGS_WARN_ON -= -w34100 #disable unreferenced formal parameter
 
-    INCLUDEPATH += C:/Python3.5/include/
-    INCLUDEPATH += C:/Boost/include/boost-1_65_1/
+    INCLUDEPATH += boost/msvc64/include/boost-1_65_1/
 
     LIBS += ../zmq/msvc64/ZeroMQ/lib/libzmq-v140-mt-4_3_1.lib
     LIBS += ../zmq/msvc64/czmq/lib/czmq.lib
     LIBS += ../zmq/msvc64/malamute/lib/mlm.lib
+    LIBS += boost/msvc64/lib/libboost_python3-vc140-mt-1_65_1.lib
+    LIBS += boost/msvc64/lib/libboost_numpy3-vc140-mt-1_65_1.lib
+
+    INCLUDEPATH += C:/Python3.5/include/
     LIBS += C:/Python3.5/libs/python35.lib
-    LIBS += C:/Boost/lib/libboost_python3-vc140-mt-1_65_1.lib
-    LIBS += C:/Boost/lib/libboost_numpy3-vc140-mt-1_65_1.lib
 }
 macx{
     QMAKE_CFLAGS_WARN_ON += -Wno-unused-parameter
