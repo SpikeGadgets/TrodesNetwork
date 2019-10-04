@@ -67,4 +67,5 @@ __pycache__/
 Makefile*
 *.stash
 *.pro.user*
+*CMakeLists.txt.user
 *_resource.rc

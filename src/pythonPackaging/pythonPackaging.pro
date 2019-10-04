@@ -65,12 +65,13 @@ macx{
     QMAKE_CFLAGS_WARN_ON += -Wno-unused-parameter
     QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-parameter
 
-    INCLUDEPATH += /usr/local/include/
-    INCLUDEPATH += /usr/local/Frameworks/Python.framework/Versions/3.7/include/python3.7m
+    INCLUDEPATH += boost/macos/include/
     LIBS +=  ../zmq/macos/libzmq/lib/libzmq.a
     LIBS +=  ../zmq/macos/czmq/lib/libczmq.a
     LIBS +=  ../zmq/macos/malamute/lib/libmlm.a
-    LIBS += /usr/local/lib/libboost_python37.a
-    LIBS += /usr/local/lib/libboost_numpy37.a
+    LIBS += boost/macos/lib/libboost_python37.a
+    LIBS += boost/macos/lib/libboost_numpy37.a
+
+    INCLUDEPATH += /usr/local/Frameworks/Python.framework/Versions/3.7/include/python3.7m
     LIBS += /usr/local/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7m.dylib
 }
