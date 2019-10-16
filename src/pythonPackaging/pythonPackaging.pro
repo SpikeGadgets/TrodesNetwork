@@ -11,7 +11,8 @@ else:  QMAKE_EXTENSION_SHLIB=so
 CONFIG += no_plugin_name_prefix plugin #no prefix or symlinks
 
 VERSION = 0.1.2
-
+QMAKE_MAC_SDK = macosx10.14
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.14
 DEFINES += BOOST_PYTHON_STATIC_LIB
 DEFINES += BOOST_NUMPY_STATIC_LIB
 
@@ -72,6 +73,12 @@ macx{
     LIBS += boost/macos/lib/libboost_python37.a
     LIBS += boost/macos/lib/libboost_numpy37.a
 
-    INCLUDEPATH += /usr/local/Frameworks/Python.framework/Versions/3.7/include/python3.7m
-    LIBS += /usr/local/Frameworks/Python.framework/Versions/3.7/lib/libpython3.7m.dylib
+
+    PYTHONPATH = $$system(/bin/bash -c \"source ~/.bash_profile; python3 -c \'import sys; from distutils import sysconfig; print(sysconfig.PREFIX);\'\")
+    PYTHONMAJOR = $$system(/bin/bash -c \"source ~/.bash_profile; python3 -c \'import sys; print(sys.version_info[0]);\'\")
+    PYTHONMINOR = $$system(/bin/bash -c \"source ~/.bash_profile; python3 -c \'import sys; print(sys.version_info[1]);\'\")
+
+    INCLUDEPATH += $$PYTHONPATH/include/python$${PYTHONMAJOR}.$${PYTHONMINOR}m/
+    LIBS += $$PYTHONPATH/lib/libpython$${PYTHONMAJOR}.$${PYTHONMINOR}m.dylib
+
 }
