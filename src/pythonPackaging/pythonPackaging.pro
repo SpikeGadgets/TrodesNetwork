@@ -39,7 +39,11 @@ unix:!macx {
     QMAKE_CXXFLAGS += -Wno-unused-parameter
 
     INCLUDEPATH += boost/include/
-    INCLUDEPATH += /usr/include/python3.5m/
+
+    PYTHONPATH = $$system(/bin/bash -c \"python3 -c \'import sys; from distutils import sysconfig; print(sysconfig.PREFIX);\'\")
+    PYTHONMAJOR = $$system(/bin/bash -c \"python3 -c \'import sys; print(sys.version_info[0]);\'\")
+    PYTHONMINOR = $$system(/bin/bash -c \"python3 -c \'import sys; print(sys.version_info[1]);\'\")
+    INCLUDEPATH += $$PYTHONPATH/include/python$${PYTHONMAJOR}.$${PYTHONMINOR}m/
 
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libzmq.a -Wl,--no-whole-archive
     LIBS += -Wl,--whole-archive ../zmq/lib/static/libczmq.a -Wl,--no-whole-archive
